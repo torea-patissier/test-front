@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { TextInput } from 'react-native-gesture-handler';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react';
 export default function HomeScreen() {
   
@@ -12,7 +12,7 @@ export default function HomeScreen() {
     ["", null, "", null,"",null,""],
     ["/", "", "+", null,"*","","/"],
   ];
-  
+
   const [grid, setGrid] = useState(initialGrid);
 
   const handleCellChange = (rowIndex: number, cellIndex: number, number: string) => {
@@ -22,7 +22,7 @@ export default function HomeScreen() {
     if(newGrid.flat().includes(number)){
       alert('Number already in grid');
       return;
-    }    
+    }
     
     if(Number(number) < 1 || Number(number) > 9 || isNaN(Number(number))){
       alert('Please enter a number between 1 and 9');
@@ -31,6 +31,10 @@ export default function HomeScreen() {
     
     newGrid[rowIndex][cellIndex] = number;
     setGrid(newGrid);
+  }
+
+  const resetGrid = () => {
+    setGrid(initialGrid);
   }
 
   return (
@@ -58,6 +62,9 @@ export default function HomeScreen() {
           </View>
         ))}
       </View>
+      <TouchableOpacity style={styles.resetButton} onPress={resetGrid}>
+        <ThemedText style={styles.resetButtonText}>Reset Grid</ThemedText>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -73,7 +80,6 @@ const styles = StyleSheet.create({
   },
   grid:{
     flexDirection: 'column',
-
   },
   nullCell:{
     width: 50,
@@ -88,6 +94,17 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
     lineHeight: 50,
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+  resetButton: {
+    marginTop: 20,
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 5,
+  },
+  resetButtonText: {
+    color: 'white',
+    fontSize: 16,
     fontWeight: 'bold',
   }
 });
