@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { TextInput } from 'react-native-gesture-handler';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
 
@@ -20,10 +20,11 @@ export default function HomeScreen() {
   ];
 
   const [grid, setGrid] = useState<GridCell[][]>(initialGrid);
+  const [enteredNumbers, setEnteredNumbers] = useState<string>("");
 
   const handleCellChange = (rowIndex: number, cellIndex: number, inputValue: string) => {
     const newGrid = [...grid];    
-    
+        
     if(newGrid.flat().some(cell => cell.value === inputValue)){
       alert('Number already in grid');
       return;
@@ -35,11 +36,14 @@ export default function HomeScreen() {
     }
 
     newGrid[rowIndex][cellIndex] = {value: inputValue};
+
     setGrid(newGrid);
+    setEnteredNumbers((prev) => prev ? `${prev} ${inputValue}` : inputValue);
   }
 
   const resetGrid = () => {
     setGrid(initialGrid);
+    setEnteredNumbers("");
   }
 
   const calculateResult = () => {
@@ -50,6 +54,10 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.grid}>
+        <View style={styles.gridHeader}>
+          <ThemedText style={styles.gridHeaderText}>Entered numbers:</ThemedText>
+          <ThemedText style={styles.gridHeaderText}>{enteredNumbers}</ThemedText>
+        </View>
         {grid.map((row,rowIndex) => (
           <View key={rowIndex} style={styles.row}>
             {row.map((cell,cellIndex) =>(
@@ -86,6 +94,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+  },
+  gridHeader: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  gridHeaderText: {
+    fontSize: 20,
+    fontWeight: 'semibold',
   },
   row: {
     flexDirection: 'row',      
