@@ -11,4 +11,8 @@ export const ErrorMessage = {
     t: 'Info',
     m: 'Calculation not yet implemented',
   },
+  WARNING: {
+    t: 'Warning',
+    m: 'Please complete the grid',
+  },
 };

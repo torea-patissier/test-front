@@ -9,7 +9,7 @@ export default function Button({
   onPress: () => void;
 }) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity style={[styles.button]} onPress={onPress}>
       <ThemedText style={styles.buttonText}>{children}</ThemedText>
     </TouchableOpacity>
   );

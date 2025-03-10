@@ -92,7 +92,7 @@ export default function HomeScreen() {
 
     newGrid[rowIndex][cellIndex] = { value: inputValue };
     setGrid(newGrid);
-    setEnteredNumbers((prev) => (prev ? `${prev} ${inputValue}` : inputValue));
+    setEnteredNumbers((prev) => (prev ? `${prev}${inputValue}` : inputValue));
   };
 
   const resetGrid = () => {
@@ -101,10 +101,13 @@ export default function HomeScreen() {
   };
 
   const calculateResult = () => {
-    // TODO: Implement calculation logic
+    if (enteredNumbers.length < 9) {
+      Alert.alert(ErrorMessage.WARNING.t, ErrorMessage.WARNING.m);
+      return;
+    }
+
     Alert.alert(ErrorMessage.CALCULATION.t, ErrorMessage.CALCULATION.m);
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.grid}>
