@@ -3,7 +3,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { TextInput } from 'react-native-gesture-handler';
 import { useState } from 'react';
 export default function HomeScreen() {
-
+  
   const initialGrid = [
     ["", null, "", "-","",null,"66"],
     ["+", null, "*", null,"-",null,"="],
@@ -12,11 +12,27 @@ export default function HomeScreen() {
     ["", null, "", null,"",null,""],
     ["/", "", "+", null,"*","","/"],
   ];
-
+  
   const [grid, setGrid] = useState(initialGrid);
 
-  
-  
+  const handleCellChange = (rowIndex: number, cellIndex: number, number: string) => {
+    
+    const newGrid = [...grid];    
+    
+    if(newGrid.flat().includes(number)){
+      alert('Number already in grid');
+      return;
+    }    
+    
+    if(Number(number) < 1 || Number(number) > 9 || isNaN(Number(number))){
+      alert('Please enter a number between 1 and 9');
+      return;
+    }
+    
+    newGrid[rowIndex][cellIndex] = number;
+    setGrid(newGrid);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.grid}>
@@ -28,13 +44,7 @@ export default function HomeScreen() {
                   key={cellIndex}
                   style={styles.cell}
                   value={cell}
-                  onChangeText={(text) => {
-                    console.log('text ',text);
-                    const newGrid = [...grid];
-                    console.log('newGrid ',newGrid);
-                    newGrid[rowIndex][cellIndex] = text;
-                    setGrid(newGrid);
-                  }}
+                  onChangeText={(text) => handleCellChange(rowIndex, cellIndex, text)}
                   keyboardType="numeric"
                 />
               ) : (
