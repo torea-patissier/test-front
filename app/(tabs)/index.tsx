@@ -1,9 +1,9 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { TextInput } from 'react-native-gesture-handler';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
-
+import { ErrorMessage } from '@/constants/ErrorMessage';
 interface GridCell {
   value: string | null;
 }
@@ -77,13 +77,16 @@ export default function HomeScreen() {
     const newGrid = [...grid];
 
     if (newGrid.flat().some((cell) => cell.value === inputValue)) {
-      alert('Number already in grid');
+      Alert.alert(
+        ErrorMessage.ALREADY_IN_GRID.t,
+        ErrorMessage.ALREADY_IN_GRID.m
+      );
       return;
     }
 
     const num = Number(inputValue);
     if (num < 1 || num > 9 || isNaN(num)) {
-      alert('Please enter a number between 1 and 9');
+      Alert.alert(ErrorMessage.INVALID_NUMBER.t, ErrorMessage.INVALID_NUMBER.m);
       return;
     }
 
@@ -99,7 +102,7 @@ export default function HomeScreen() {
 
   const calculateResult = () => {
     // TODO: Implement calculation logic
-    alert('Calculation not yet implemented');
+    Alert.alert(ErrorMessage.CALCULATION.t, ErrorMessage.CALCULATION.m);
   };
 
   return (
