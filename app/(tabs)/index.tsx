@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react';
+import Button from '@/components/ui/Button';
 export default function HomeScreen() {
   
   const initialGrid = [
@@ -37,6 +38,11 @@ export default function HomeScreen() {
     setGrid(initialGrid);
   }
 
+  const calculateResult = () => {
+    // TODO: Implement calculation logic
+    alert('Calculation not yet implemented');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.grid}>
@@ -62,9 +68,10 @@ export default function HomeScreen() {
           </View>
         ))}
       </View>
-      <TouchableOpacity style={styles.resetButton} onPress={resetGrid}>
-        <ThemedText style={styles.resetButtonText}>Reset Grid</ThemedText>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <Button onPress={resetGrid}>Reset Grid</Button>
+        <Button onPress={calculateResult}>Calculate</Button>
+      </View>
     </View>
   );
 }
@@ -74,6 +81,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
   row: {
     flexDirection: 'row',      
@@ -96,15 +104,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
   },
-  resetButton: {
+  buttonContainer: {
+    flexDirection: 'column',
+    gap: 10,
     marginTop: 20,
-    backgroundColor: '#007AFF',
-    padding: 10,
-    borderRadius: 5,
-  },
-  resetButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+    width: '100%',
   }
 });
