@@ -1,3 +1,8 @@
+/**
+ * Error messages for the app
+ * t: title
+ * m: message
+ */
 export const ErrorMessage = {
   ALREADY_IN_GRID: {
     t: 'Error',
