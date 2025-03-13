@@ -14,3 +14,16 @@ export async function getSolutions() {
 
   return response.json();
 }
+
+export async function postSolution(solution: string) {
+  const response = await fetch(`${API_ROUTES.SOLUTIONS.POST}`, {
+    method: 'POST',
+    body: JSON.stringify({ solution }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Erreur lors de la publication de la solution');
+  }
+
+  return response.json();
+}
