@@ -14,7 +14,6 @@ interface Solution {
 export default function SolutionsScreen() {
   const [solutions, setSolutions] = useState<Solution[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchSolutions = async () => {
@@ -23,11 +22,8 @@ export default function SolutionsScreen() {
         setSolutions(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setIsLoading(false);
       }
     };
-
     fetchSolutions();
   }, []);
 
@@ -53,22 +49,6 @@ export default function SolutionsScreen() {
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>Error: {error}</Text>
-      </View>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>Loading solutions...</Text>
-      </View>
-    );
-  }
-
-  if (!solutions.length) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.emptyText}>No solutions found</Text>
       </View>
     );
   }

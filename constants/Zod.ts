@@ -1,14 +1,20 @@
 import { z } from 'zod';
 
 export const PuzzleNumbersSchema = z
-  .array(z.number().min(1).max(9).int())
-  .length(9)
+  .array(
+    z
+      .number()
+      .min(1, 'Numbers must be between 1 and 9')
+      .max(9, 'Numbers must be between 1 and 9')
+      .int('Only integers are allowed')
+  )
+  .length(9, 'Must provide exactly 9 numbers')
   .refine(
     (numbers): numbers is number[] => {
       return new Set(numbers).size === numbers.length;
     },
     {
-      message: 'Rule : 9 unique integers between 1 and 9',
+      message: 'All numbers must be unique',
     }
   );
 

@@ -79,7 +79,10 @@ export const usePuzzle = () => {
     } catch (error) {
       console.log('error', error);
       if (error instanceof z.ZodError) {
-        setErrorMessage(error.errors.map((err) => err.message).join(', '));
+        const uniqueMessages = [
+          ...new Set(error.errors.map((err) => err.message)),
+        ];
+        setErrorMessage(uniqueMessages[0]);
       } else {
         Alert.alert('Error', 'An unexpected error occurred.');
       }
