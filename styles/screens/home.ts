@@ -40,7 +40,6 @@ export const styles = StyleSheet.create({
     height: 50,
     textAlign: 'center',
     textAlignVertical: 'center',
-    // lineHeight: 50
     fontSize: 20,
     fontWeight: 'bold',
   },
