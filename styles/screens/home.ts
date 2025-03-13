@@ -6,7 +6,8 @@ export const createStyles = (colorScheme: 'light' | 'dark') =>
     container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
+      paddingTop: 20,
       padding: 20,
       backgroundColor: Colors[colorScheme].background,
     },

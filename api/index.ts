@@ -1,4 +1,5 @@
-const ROOT_URL = 'http://localhost:9090/api';
+// const ROOT_URL = 'http://localhost:9090/api'; // for simulator
+const ROOT_URL = 'http://192.168.1.9:9090/api'; // for real device
 
 const PARAMS = {
   ID: ':id',

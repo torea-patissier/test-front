@@ -76,6 +76,7 @@ export const usePuzzle = () => {
       PuzzleSolutionSchema.parse(solutionData);
       await postSolution(solutionData);
       setErrorMessage(null);
+      Alert.alert('Success !', 'Solution submitted successfully.');
     } catch (error) {
       console.log('error', error);
       if (error instanceof z.ZodError) {

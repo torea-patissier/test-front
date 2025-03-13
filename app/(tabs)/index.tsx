@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '@/components/ui/Button';
@@ -55,37 +55,39 @@ export default function PuzzleScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.grid}>
-        <View style={styles.gridHeader}>
-          <ThemedText style={styles.gridHeaderText}>
-            Entered numbers:
-          </ThemedText>
-          <ThemedText style={styles.gridHeaderText}>
-            {userInputNumbers}
-          </ThemedText>
-          {errorMessage && (
-            <ThemedText
-              lightColor={Colors.light.error}
-              darkColor={Colors.dark.error}
-              style={styles.errorText}
-            >
-              {errorMessage}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.grid}>
+          <View style={styles.gridHeader}>
+            <ThemedText style={styles.gridHeaderText}>
+              Entered numbers:
             </ThemedText>
-          )}
-        </View>
-        {puzzleGrid.map((row: PuzzleCell[], rowIndex: number) => (
-          <View key={rowIndex} style={styles.row}>
-            {row.map((cell: PuzzleCell, cellIndex: number) =>
-              renderPuzzleCell(cell, rowIndex, cellIndex)
+            <ThemedText style={styles.gridHeaderText}>
+              {userInputNumbers}
+            </ThemedText>
+            {errorMessage && (
+              <ThemedText
+                lightColor={Colors.light.error}
+                darkColor={Colors.dark.error}
+                style={styles.errorText}
+              >
+                {errorMessage}
+              </ThemedText>
             )}
           </View>
-        ))}
+          {puzzleGrid.map((row: PuzzleCell[], rowIndex: number) => (
+            <View key={rowIndex} style={styles.row}>
+              {row.map((cell: PuzzleCell, cellIndex: number) =>
+                renderPuzzleCell(cell, rowIndex, cellIndex)
+              )}
+            </View>
+          ))}
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button onPress={resetPuzzle}>Reset Grid</Button>
+          <Button onPress={submitPuzzleSolution}>Calculate</Button>
+        </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <Button onPress={resetPuzzle}>Reset Grid</Button>
-        <Button onPress={submitPuzzleSolution}>Calculate</Button>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
