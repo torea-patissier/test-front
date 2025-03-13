@@ -8,11 +8,7 @@ import {
   PUZZLE_INPUT_POSITIONS,
   createFreshPuzzleGrid,
 } from '@/constants/Puzzle';
-import {
-  PuzzleGridSchema,
-  PuzzleNumbersSchema,
-  PuzzleSolutionSchema,
-} from '@/constants/Zod';
+import { PuzzleNumbersSchema, PuzzleSolutionSchema } from '@/constants/Zod';
 import { z } from 'zod';
 
 export const usePuzzle = () => {
@@ -38,16 +34,6 @@ export const usePuzzle = () => {
     );
   };
 
-  const validateAndUpdateGrid = (updatedGrid: PuzzleCell[][]) => {
-    try {
-      PuzzleGridSchema.parse(updatedGrid);
-      return true;
-    } catch {
-      setErrorMessage('Invalid grid update');
-      return false;
-    }
-  };
-
   const handlePuzzleCellInput = (
     rowIndex: number,
     cellIndex: number,
@@ -64,8 +50,6 @@ export const usePuzzle = () => {
       )
     );
 
-    if (!validateAndUpdateGrid(updatedGrid)) return;
-
     const updatedUserInput = userInputNumbers
       .replace(currentCell.value || '', '')
       .concat(newValue);
@@ -78,7 +62,6 @@ export const usePuzzle = () => {
 
   const resetPuzzle = () => {
     const freshGrid = createFreshPuzzleGrid();
-    if (!validateAndUpdateGrid(freshGrid)) return;
 
     setPuzzleGrid(freshGrid);
     setUserInputNumbers('');
@@ -94,6 +77,7 @@ export const usePuzzle = () => {
       await postSolution(solutionData);
       setErrorMessage(null);
     } catch (error) {
+      console.log('error', error);
       if (error instanceof z.ZodError) {
         setErrorMessage(error.errors.map((err) => err.message).join(', '));
       } else {

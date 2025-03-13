@@ -27,29 +27,32 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name='index'
         options={{
+          headerShown: true,
           title: 'Home',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <IconSymbol size={28} name='house.fill' color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="solutions"
+        name='solutions'
         options={{
+          headerShown: true,
           title: 'Solutions',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="list.bullet" color={color} />
+            <IconSymbol size={28} name='list.bullet' color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="algorithm"
+        name='algorithm'
         options={{
+          headerShown: true,
           title: 'Algorithm',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="function" color={color} />
+            <IconSymbol size={28} name='function' color={color} />
           ),
         }}
       />
