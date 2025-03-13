@@ -1,10 +1,11 @@
-import { StyleSheet, View, Alert } from 'react-native';
+import { View, Alert } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { TextInput } from 'react-native-gesture-handler';
 import { useState, useEffect } from 'react';
 import Button from '@/components/ui/Button';
 import { ErrorMessage } from '@/constants/ErrorMessage';
 import { postSolution } from '@/app/api/solutions';
+import { styles } from '@/styles/screens/home';
 
 interface GridCell {
   value: string | null;
@@ -12,15 +13,7 @@ interface GridCell {
 }
 
 type GridData = {
-  A: number;
-  B: number;
-  C: number;
-  D: number;
-  E: number;
-  F: number;
-  G: number;
-  H: number;
-  I: number;
+  [key: string]: number;
 };
 
 const INITIAL_GRID: GridCell[][] = [
@@ -80,17 +73,9 @@ const INITIAL_GRID: GridCell[][] = [
   ],
 ];
 
-const INITIAL_GRID_DATA: GridData = {
-  A: 0,
-  B: 0,
-  C: 0,
-  D: 0,
-  E: 0,
-  F: 0,
-  G: 0,
-  H: 0,
-  I: 0,
-};
+const INITIAL_GRID_DATA: GridData = Object.fromEntries(
+  ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].map((key) => [key, 0])
+);
 
 export default function HomeScreen() {
   const [grid, setGrid] = useState<GridCell[][]>(INITIAL_GRID);
@@ -225,49 +210,3 @@ export default function HomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  gridHeader: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  gridHeaderText: {
-    fontSize: 20,
-    fontWeight: 'semibold',
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  grid: {
-    flexDirection: 'column',
-  },
-  nullCell: {
-    width: 50,
-    height: 50,
-  },
-  cell: {
-    borderWidth: 1,
-    borderColor: 'black',
-    width: 50,
-    height: 50,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    lineHeight: 50,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  buttonContainer: {
-    flexDirection: 'column',
-    gap: 10,
-    marginTop: 20,
-    width: '100%',
-  },
-});

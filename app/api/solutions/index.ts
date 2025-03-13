@@ -1,4 +1,4 @@
-import { API_ROUTES } from './index';
+import { API_ROUTES } from '../index';
 
 export async function getSolutions() {
   const response = await fetch(`${API_ROUTES.SOLUTIONS.GET}`, {

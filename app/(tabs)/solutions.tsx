@@ -1,6 +1,7 @@
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
 import { getSolutions } from '@/app/api/solutions';
+import { styles } from '@/styles/screens/solutions';
 
 export default function SolutionsScreen() {
   const [solutions, setSolutions] = useState([]);
@@ -50,24 +51,3 @@ export default function SolutionsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  solutionCard: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderRadius: 8,
-    margin: 16,
-    shadowColor: '#000',
-  },
-  list: {
-    flex: 1,
-    width: '100%',
-    marginBottom: 80,
-  },
-});
