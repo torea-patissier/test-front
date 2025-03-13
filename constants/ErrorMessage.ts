@@ -20,4 +20,16 @@ export const ErrorMessage = {
     t: 'Warning',
     m: 'Please complete the grid',
   },
+  INVALID_RANGE: {
+    t: 'Error',
+    m: 'All numbers must be between 1 and 9',
+  },
+  DUPLICATE_NUMBERS: {
+    t: 'Error',
+    m: 'Each number can only be used once',
+  },
+  SUBMISSION_ERROR: {
+    t: 'Error',
+    m: 'Failed to submit solution',
+  },
 };

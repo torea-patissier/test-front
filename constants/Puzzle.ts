@@ -2,9 +2,10 @@ export interface PuzzleCell {
   value: string | null;
   inputName?: string | null;
 }
-
 export type PuzzleNumbers = number[];
+
 export const EMPTY_PUZZLE_NUMBERS = Array(9).fill(0);
+
 export const PUZZLE_INPUT_POSITIONS = [
   'A',
   'B',
