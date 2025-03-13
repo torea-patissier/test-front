@@ -12,9 +12,7 @@ interface GridCell {
   inputName?: string | null;
 }
 
-type GridData = {
-  [key: string]: number;
-};
+type GridData = number[];
 
 const INITIAL_GRID: GridCell[][] = [
   [
@@ -73,9 +71,7 @@ const INITIAL_GRID: GridCell[][] = [
   ],
 ];
 
-const INITIAL_GRID_DATA: GridData = Object.fromEntries(
-  ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].map((key) => [key, 0])
-);
+const INITIAL_GRID_DATA: GridData = Array(9).fill(0);
 
 export default function HomeScreen() {
   const [grid, setGrid] = useState<GridCell[][]>(INITIAL_GRID);
@@ -106,10 +102,14 @@ export default function HomeScreen() {
   ): GridData => {
     if (!currentCell.inputName) return gridData;
 
-    return {
-      ...gridData,
-      [currentCell.inputName]: Number(inputValue),
-    };
+    const index = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].indexOf(
+      currentCell.inputName
+    );
+    if (index === -1) return gridData;
+
+    const newGridData = [...gridData];
+    newGridData[index] = Number(inputValue);
+    return newGridData;
   };
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function HomeScreen() {
   const resetGrid = () => {
     setGrid(INITIAL_GRID);
     setEnteredNumbers('');
-    setGridData(INITIAL_GRID_DATA);
+    setGridData([]);
   };
 
   const calculateResult = async () => {
@@ -152,7 +152,7 @@ export default function HomeScreen() {
 
     try {
       const response = await postSolution({
-        gridData: JSON.stringify(gridData),
+        gridData: gridData,
       });
       console.log(response);
     } catch (error) {

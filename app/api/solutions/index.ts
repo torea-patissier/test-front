@@ -15,7 +15,7 @@ export async function getSolutions() {
   return response.json();
 }
 
-export async function postSolution(solution: { gridData: string }) {
+export async function postSolution(solution: { gridData: number[] }) {
   const response = await fetch(`${API_ROUTES.SOLUTIONS.POST}`, {
     method: 'POST',
     headers: {
@@ -27,7 +27,5 @@ export async function postSolution(solution: { gridData: string }) {
   if (!response.ok) {
     throw new Error('Erreur lors de la publication de la solution');
   }
-  console.log('response ::::', response);
-
   return response.json();
 }

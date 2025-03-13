@@ -14,6 +14,6 @@ export const API_ROUTES = {
     DELETE_BY_ID: `${ROOT_URL}/solutions/${PARAMS.ID}`,
   },
   ALGORITHMS: {
-    POST: `${ROOT_URL}/calculateSolutions`,
+    GET: `${ROOT_URL}/solutions/algorithm`,
   },
 };
