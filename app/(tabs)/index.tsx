@@ -7,14 +7,14 @@ import { ErrorMessage } from '@/constants/ErrorMessage';
 import { postSolution } from '@/api/solutions';
 import { styles } from '@/styles/screens/home';
 
-interface GridCell {
+interface PuzzleCell {
   value: string | null;
   inputName?: string | null;
 }
 
-type GridData = number[];
+type PuzzleNumbers = number[];
 
-const INITIAL_GRID: GridCell[][] = [
+const EMPTY_PUZZLE_GRID: PuzzleCell[][] = [
   [
     { value: '', inputName: 'A' },
     { value: null },
@@ -71,80 +71,82 @@ const INITIAL_GRID: GridCell[][] = [
   ],
 ];
 
-const INITIAL_GRID_DATA = Array(9).fill(0);
-const INPUT_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+const EMPTY_PUZZLE_NUMBERS = Array(9).fill(0);
+const PUZZLE_INPUT_POSITIONS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 
-export default function HomeScreen() {
-  const [grid, setGrid] = useState<GridCell[][]>(INITIAL_GRID);
-  const [enteredNumbers, setEnteredNumbers] = useState('');
-  const [gridData, setGridData] = useState<GridData>(INITIAL_GRID_DATA);
+export default function PuzzleScreen() {
+  const [puzzleGrid, setPuzzleGrid] =
+    useState<PuzzleCell[][]>(EMPTY_PUZZLE_GRID);
+  const [userInputNumbers, setUserInputNumbers] = useState('');
+  const [puzzleNumbers, setPuzzleNumbers] =
+    useState<PuzzleNumbers>(EMPTY_PUZZLE_NUMBERS);
 
-  const validateInput = (inputValue: string, grid: GridCell[][]): boolean => {
-    if (grid.flat().some((cell) => cell.value === inputValue)) {
-      Alert.alert(
-        ErrorMessage.ALREADY_IN_GRID.t,
-        ErrorMessage.ALREADY_IN_GRID.m
-      );
-      return false;
-    }
+  const updatePuzzleNumbers = (
+    currentCell: PuzzleCell,
+    newValue: string
+  ): PuzzleNumbers => {
+    if (!currentCell.inputName) return puzzleNumbers;
 
-    const num = Number(inputValue);
-    if (num < 1 || num > 9 || isNaN(num)) {
-      Alert.alert(ErrorMessage.INVALID_NUMBER.t, ErrorMessage.INVALID_NUMBER.m);
-      return false;
-    }
+    const positionIndex = PUZZLE_INPUT_POSITIONS.indexOf(currentCell.inputName);
+    if (positionIndex === -1) return puzzleNumbers;
 
-    return true;
+    const updatedPuzzleNumbers = [...puzzleNumbers];
+    updatedPuzzleNumbers[positionIndex] = Number(newValue);
+    return updatedPuzzleNumbers;
   };
 
-  const updateGridData = (
-    currentCell: GridCell,
-    inputValue: string
-  ): GridData => {
-    if (!currentCell.inputName) return gridData;
-
-    const index = INPUT_NAMES.indexOf(currentCell.inputName);
-    if (index === -1) return gridData;
-
-    const newGridData = [...gridData];
-    newGridData[index] = Number(inputValue);
-    return newGridData;
-  };
-
-  const handleCellChange = (
+  const handlePuzzleCellInput = (
     rowIndex: number,
     cellIndex: number,
-    inputValue: string
+    newValue: string
   ) => {
-    if (!validateInput(inputValue, grid)) return;
+    const currentCell = puzzleGrid[rowIndex][cellIndex];
 
-    const newGrid = [...grid];
-    const currentCell = newGrid[rowIndex][cellIndex];
-
-    newGrid[rowIndex][cellIndex] = {
-      value: inputValue,
+    const updatedGrid = [...puzzleGrid];
+    updatedGrid[rowIndex][cellIndex] = {
+      value: newValue,
       inputName: currentCell.inputName,
     };
 
-    setGrid(newGrid);
-    setEnteredNumbers((prev) => (prev ? `${prev}${inputValue}` : inputValue));
-    setGridData(updateGridData(currentCell, inputValue));
+    let updatedUserInput = userInputNumbers;
+    if (currentCell.value) {
+      updatedUserInput = updatedUserInput.replace(currentCell.value, '');
+    }
+    updatedUserInput += newValue;
+
+    setPuzzleGrid(updatedGrid);
+    setUserInputNumbers(updatedUserInput);
+    setPuzzleNumbers(updatePuzzleNumbers(currentCell, newValue));
   };
 
-  const resetGrid = () => {
-    setGrid(INITIAL_GRID);
-    setEnteredNumbers('');
-    setGridData(INITIAL_GRID_DATA);
+  const resetPuzzle = () => {
+    setPuzzleGrid(EMPTY_PUZZLE_GRID);
+    setUserInputNumbers('');
+    setPuzzleNumbers(EMPTY_PUZZLE_NUMBERS);
   };
 
-  const calculateResult = async () => {
-    if (enteredNumbers.length < 9) {
+  const submitPuzzleSolution = async () => {
+    if (userInputNumbers.length < 9) {
       Alert.alert(ErrorMessage.WARNING.t, ErrorMessage.WARNING.m);
       return;
     }
 
+    const isValidNumbers = puzzleNumbers.every((num) => num >= 1 && num <= 9);
+    if (!isValidNumbers) {
+      Alert.alert('Error', 'All numbers must be between 1 and 9');
+      return;
+    }
+
+    const uniqueNumbers = new Set(puzzleNumbers);
+    if (uniqueNumbers.size !== puzzleNumbers.length) {
+      Alert.alert('Error', 'Each number can only be used once');
+      return;
+    }
+
     try {
-      await postSolution({ gridData });
+      const data = { gridData: puzzleNumbers };
+      console.log('Submitting solution data:', data);
+      await postSolution(data);
     } catch (error) {
       Alert.alert(
         'Error',
@@ -153,14 +155,20 @@ export default function HomeScreen() {
     }
   };
 
-  const renderCell = (cell: GridCell, rowIndex: number, cellIndex: number) => {
-    if (cell.value === '') {
+  const renderPuzzleCell = (
+    cell: PuzzleCell,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
+    if (cell.inputName) {
       return (
         <TextInput
           key={cellIndex}
           style={styles.cell}
-          value={cell.value}
-          onChangeText={(text) => handleCellChange(rowIndex, cellIndex, text)}
+          value={cell.value || ''}
+          onChangeText={(text) =>
+            handlePuzzleCellInput(rowIndex, cellIndex, text)
+          }
           keyboardType="numeric"
         />
       );
@@ -169,7 +177,10 @@ export default function HomeScreen() {
     return (
       <ThemedText
         key={cellIndex}
-        style={cell.value === null ? styles.nullCell : styles.cell}
+        style={[
+          cell.value === null ? styles.nullCell : styles.cell,
+          { lineHeight: 50 },
+        ]}
       >
         {cell.value}
       </ThemedText>
@@ -184,20 +195,20 @@ export default function HomeScreen() {
             Entered numbers:
           </ThemedText>
           <ThemedText style={styles.gridHeaderText}>
-            {enteredNumbers}
+            {userInputNumbers}
           </ThemedText>
         </View>
-        {grid.map((row, rowIndex) => (
+        {puzzleGrid.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.row}>
             {row.map((cell, cellIndex) =>
-              renderCell(cell, rowIndex, cellIndex)
+              renderPuzzleCell(cell, rowIndex, cellIndex)
             )}
           </View>
         ))}
       </View>
       <View style={styles.buttonContainer}>
-        <Button onPress={resetGrid}>Reset Grid</Button>
-        <Button onPress={calculateResult}>Calculate</Button>
+        <Button onPress={resetPuzzle}>Reset Grid</Button>
+        <Button onPress={submitPuzzleSolution}>Calculate</Button>
       </View>
     </View>
   );
