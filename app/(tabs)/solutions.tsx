@@ -8,8 +8,8 @@ interface Solution {
   gridData: string;
   createdAt: string;
   result: number;
-  is_correct: boolean;
-  is_algo_generated: boolean;
+  algoGenerated: boolean;
+  correct: boolean;
 }
 
 export default function SolutionsScreen() {
@@ -42,15 +42,20 @@ export default function SolutionsScreen() {
   }
 
   const renderItem = ({ item }: { item: Solution }) => (
-    <View style={styles.solutionCard}>
-      <Text style={styles.solutionText}>Grid Data: [{item.gridData}]</Text>
+    <View
+      style={[
+        styles.solutionCard,
+        { backgroundColor: item.correct ? '#e6ffe6' : '#ffe6e6' },
+      ]}
+    >
+      <Text style={styles.solutionText}>Data: [{item.gridData}]</Text>
       <Text style={styles.solutionText}>Created: {item.createdAt}</Text>
       <Text style={styles.solutionText}>Result: {item.result}</Text>
       <Text style={styles.solutionText}>
-        Is Algo Generated: {item.is_algo_generated ? 'Yes' : 'No'}
+        Is Algo Generated: {item.algoGenerated ? 'Yes' : 'No'}
       </Text>
       <Text style={styles.solutionText}>
-        Is Correct: {item.is_correct ? 'Yes' : 'No'}
+        Is Correct: {item.correct ? 'Yes' : 'No'}
       </Text>
     </View>
   );
