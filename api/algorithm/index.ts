@@ -12,7 +12,5 @@ export async function getAlgorithm() {
     throw new Error('Failed to fetch algorithm');
   }
 
-  console.log('response ::::', response);
-
   return response.json();
 }
