@@ -1,26 +1,75 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Color palette for the app in both light and dark modes.
+ * Core colors for essential UI elements and interactions.
  */
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+// Primary brand colors
+const primaryLight = '#0A7EA4';
+const primaryDark = '#60CDFF';
+
+// Status colors
+const successLight = '#22C55E';
+const successDark = '#4ADE80';
+const errorLight = '#DC2626';
+const errorDark = '#EF4444';
+
+// Card colors
+const cardSuccessLight = '#e6ffe6';
+const cardErrorLight = '#ffe6e6';
+const cardSuccessDark = '#1a331a';
+const cardErrorDark = '#331a1a';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    // Core colors
+    text: '#111827',
+    background: '#FFFFFF',
+    border: '#E5E7EB',
+
+    // Brand colors
+    primary: primaryLight,
+    tint: primaryLight,
+
+    // UI elements
+    tabIconDefault: '#9CA3AF',
+    tabIconSelected: primaryLight,
+
+    // Interactive states
+    pressable: '#F3F4F6',
+    pressableActive: '#D1D5DB',
+
+    // Status colors
+    success: successLight,
+    error: errorLight,
+
+    // Card colors
+    cardSuccess: cardSuccessLight,
+    cardError: cardErrorLight,
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    // Core colors
+    text: '#F9FAFB',
+    background: '#111827',
+    border: '#374151',
+
+    // Brand colors
+    primary: primaryDark,
+    tint: primaryDark,
+
+    // UI elements
+    tabIconDefault: '#6B7280',
+    tabIconSelected: primaryDark,
+
+    // Interactive states
+    pressable: '#1F2937',
+    pressableActive: '#4B5563',
+
+    // Status colors
+    success: successDark,
+    error: errorDark,
+
+    // Card colors
+    cardSuccess: cardSuccessDark,
+    cardError: cardErrorDark,
   },
 };
