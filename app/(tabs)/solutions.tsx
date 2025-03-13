@@ -37,8 +37,11 @@ export default function SolutionsScreen() {
     <View style={styles.container}>
       {solutions.length > 0 ? (
         <FlatList
+          style={styles.list}
           data={solutions}
           renderItem={renderItem}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
           keyExtractor={(item, index) => index.toString()}
         />
       ) : (
@@ -61,5 +64,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     margin: 16,
     shadowColor: '#000',
+  },
+  list: {
+    flex: 1,
+    width: '100%',
+    marginBottom: 80,
   },
 });
