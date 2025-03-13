@@ -49,7 +49,6 @@ export default function SolutionsScreen() {
       ]}
     >
       <Text style={styles.solutionText}>Data: [{item.gridData}]</Text>
-      <Text style={styles.solutionText}>Created: {item.createdAt}</Text>
       <Text style={styles.solutionText}>Result: {item.result}</Text>
       <Text style={styles.solutionText}>
         Is Algo Generated: {item.algoGenerated ? 'Yes' : 'No'}
