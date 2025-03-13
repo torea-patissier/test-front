@@ -8,10 +8,10 @@ import { postSolution } from '@/api/solutions';
 import { styles } from '@/styles/screens/home';
 import {
   PuzzleCell,
-  EMPTY_PUZZLE_GRID,
+  PuzzleNumbers,
   EMPTY_PUZZLE_NUMBERS,
   PUZZLE_INPUT_POSITIONS,
-  PuzzleNumbers,
+  EMPTY_PUZZLE_GRID,
 } from '@/constants/Puzzle';
 
 export default function PuzzleScreen() {
@@ -71,12 +71,14 @@ export default function PuzzleScreen() {
       return;
     }
 
+    // Check if all numbers are between 1-9
     const isValidNumbers = puzzleNumbers.every((num) => num >= 1 && num <= 9);
     if (!isValidNumbers) {
       Alert.alert('Error', 'All numbers must be between 1 and 9');
       return;
     }
 
+    // Check for duplicate numbers
     const uniqueNumbers = new Set(puzzleNumbers);
     if (uniqueNumbers.size !== puzzleNumbers.length) {
       Alert.alert('Error', 'Each number can only be used once');

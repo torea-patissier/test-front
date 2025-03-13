@@ -2,6 +2,8 @@ export interface PuzzleCell {
   value: string | null;
   inputName?: string | null;
 }
+
+export type PuzzleNumbers = number[];
 export const EMPTY_PUZZLE_NUMBERS = Array(9).fill(0);
 export const PUZZLE_INPUT_POSITIONS = [
   'A',
@@ -14,8 +16,6 @@ export const PUZZLE_INPUT_POSITIONS = [
   'H',
   'I',
 ];
-
-export type PuzzleNumbers = number[];
 
 export const EMPTY_PUZZLE_GRID: PuzzleCell[][] = [
   [
@@ -68,7 +68,8 @@ export const EMPTY_PUZZLE_GRID: PuzzleCell[][] = [
     { value: '', inputName: 'C' },
     { value: '+' },
     { value: null },
-    { value: '*', inputName: 'H' },
+    { value: '*' },
+    { value: '', inputName: 'H' },
     { value: '/' },
   ],
 ];
