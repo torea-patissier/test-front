@@ -27,8 +27,8 @@ export default function SolutionsScreen() {
     );
   }
 
-  const renderItem = ({ item, index }: { item: any; index: number }) => (
-    <View style={styles.solutionCard} key={index}>
+  const renderItem = ({ item }: { item: string }) => (
+    <View style={styles.solutionCard}>
       <Text>{JSON.stringify(item)}</Text>
     </View>
   );
@@ -39,7 +39,7 @@ export default function SolutionsScreen() {
         <FlatList
           data={solutions}
           renderItem={renderItem}
-          keyExtractor={(index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()}
         />
       ) : (
         <Text>Loading solutions...</Text>
