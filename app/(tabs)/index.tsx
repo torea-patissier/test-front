@@ -4,6 +4,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useState, useEffect } from 'react';
 import Button from '@/components/ui/Button';
 import { ErrorMessage } from '@/constants/ErrorMessage';
+import { postSolution } from '@/app/api/solutions';
 
 interface GridCell {
   value: string | null;
@@ -11,7 +12,15 @@ interface GridCell {
 }
 
 type GridData = {
-  [key: string]: string;
+  A: number;
+  B: number;
+  C: number;
+  D: number;
+  E: number;
+  F: number;
+  G: number;
+  H: number;
+  I: number;
 };
 
 const INITIAL_GRID: GridCell[][] = [
@@ -71,9 +80,17 @@ const INITIAL_GRID: GridCell[][] = [
   ],
 ];
 
-const INITIAL_GRID_DATA: GridData = Object.fromEntries(
-  ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'].map((key) => [key, ''])
-);
+const INITIAL_GRID_DATA: GridData = {
+  A: 0,
+  B: 0,
+  C: 0,
+  D: 0,
+  E: 0,
+  F: 0,
+  G: 0,
+  H: 0,
+  I: 0,
+};
 
 export default function HomeScreen() {
   const [grid, setGrid] = useState<GridCell[][]>(INITIAL_GRID);
@@ -102,16 +119,11 @@ export default function HomeScreen() {
     currentCell: GridCell,
     inputValue: string
   ): GridData => {
+    if (!currentCell.inputName) return gridData;
+
     return {
-      a: currentCell.inputName === 'A' ? inputValue : gridData.a,
-      b: currentCell.inputName === 'B' ? inputValue : gridData.b,
-      c: currentCell.inputName === 'C' ? inputValue : gridData.c,
-      d: currentCell.inputName === 'D' ? inputValue : gridData.d,
-      e: currentCell.inputName === 'E' ? inputValue : gridData.e,
-      f: currentCell.inputName === 'F' ? inputValue : gridData.f,
-      g: currentCell.inputName === 'G' ? inputValue : gridData.g,
-      h: currentCell.inputName === 'H' ? inputValue : gridData.h,
-      i: currentCell.inputName === 'I' ? inputValue : gridData.i,
+      ...gridData,
+      [currentCell.inputName]: Number(inputValue),
     };
   };
 
@@ -147,13 +159,21 @@ export default function HomeScreen() {
     setGridData(INITIAL_GRID_DATA);
   };
 
-  const calculateResult = () => {
+  const calculateResult = async () => {
     if (enteredNumbers.length < 9) {
       Alert.alert(ErrorMessage.WARNING.t, ErrorMessage.WARNING.m);
       return;
     }
 
-    Alert.alert(ErrorMessage.CALCULATION.t, ErrorMessage.CALCULATION.m);
+    try {
+      const response = await postSolution({
+        gridData: JSON.stringify(gridData),
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('Error', 'Failed to submit solution - Invalid content type');
+    }
   };
 
   const renderCell = (cell: GridCell, rowIndex: number, cellIndex: number) => {
