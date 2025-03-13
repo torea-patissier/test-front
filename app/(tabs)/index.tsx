@@ -1,10 +1,10 @@
 import { View, Alert } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { TextInput } from 'react-native-gesture-handler';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { ErrorMessage } from '@/constants/ErrorMessage';
-import { postSolution } from '@/app/api/solutions';
+import { postSolution } from '@/api/solutions';
 import { styles } from '@/styles/screens/home';
 
 interface GridCell {
@@ -71,11 +71,12 @@ const INITIAL_GRID: GridCell[][] = [
   ],
 ];
 
-const INITIAL_GRID_DATA: GridData = Array(9).fill(0);
+const INITIAL_GRID_DATA = Array(9).fill(0);
+const INPUT_NAMES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 
 export default function HomeScreen() {
   const [grid, setGrid] = useState<GridCell[][]>(INITIAL_GRID);
-  const [enteredNumbers, setEnteredNumbers] = useState<string>('');
+  const [enteredNumbers, setEnteredNumbers] = useState('');
   const [gridData, setGridData] = useState<GridData>(INITIAL_GRID_DATA);
 
   const validateInput = (inputValue: string, grid: GridCell[][]): boolean => {
@@ -102,9 +103,7 @@ export default function HomeScreen() {
   ): GridData => {
     if (!currentCell.inputName) return gridData;
 
-    const index = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'].indexOf(
-      currentCell.inputName
-    );
+    const index = INPUT_NAMES.indexOf(currentCell.inputName);
     if (index === -1) return gridData;
 
     const newGridData = [...gridData];
@@ -112,22 +111,16 @@ export default function HomeScreen() {
     return newGridData;
   };
 
-  useEffect(() => {
-    console.log(gridData);
-  }, [gridData]);
-
   const handleCellChange = (
     rowIndex: number,
     cellIndex: number,
     inputValue: string
   ) => {
+    if (!validateInput(inputValue, grid)) return;
+
     const newGrid = [...grid];
-
-    if (!validateInput(inputValue, newGrid)) {
-      return;
-    }
-
     const currentCell = newGrid[rowIndex][cellIndex];
+
     newGrid[rowIndex][cellIndex] = {
       value: inputValue,
       inputName: currentCell.inputName,
@@ -141,7 +134,7 @@ export default function HomeScreen() {
   const resetGrid = () => {
     setGrid(INITIAL_GRID);
     setEnteredNumbers('');
-    setGridData([]);
+    setGridData(INITIAL_GRID_DATA);
   };
 
   const calculateResult = async () => {
@@ -151,13 +144,12 @@ export default function HomeScreen() {
     }
 
     try {
-      const response = await postSolution({
-        gridData: gridData,
-      });
-      console.log(response);
+      await postSolution({ gridData });
     } catch (error) {
-      console.log(error);
-      Alert.alert('Error', 'Failed to submit solution - Invalid content type');
+      Alert.alert(
+        'Error',
+        'Failed to submit solution - Invalid content type' + error
+      );
     }
   };
 

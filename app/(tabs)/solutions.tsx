@@ -1,12 +1,11 @@
 import { View, Text, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
-import { getSolutions } from '@/app/api/solutions';
+import { getSolutions } from '@/api/solutions';
 import { styles } from '@/styles/screens/solutions';
 
 interface Solution {
   id: string;
   gridData: string;
-  createdAt: string;
   result: number;
   algoGenerated: boolean;
   correct: boolean;
@@ -17,31 +16,22 @@ export default function SolutionsScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchSolutions = async () => {
-    try {
-      const data = await getSolutions();
-      console.log('data ::::', data);
-      setSolutions(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchSolutions = async () => {
+      try {
+        const data = await getSolutions();
+        setSolutions(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchSolutions();
   }, []);
 
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Error: {error}</Text>
-      </View>
-    );
-  }
-
-  const renderItem = ({ item }: { item: Solution }) => (
+  const renderSolutionCard = ({ item }: { item: Solution }) => (
     <View
       style={[
         styles.solutionCard,
@@ -59,22 +49,40 @@ export default function SolutionsScreen() {
     </View>
   );
 
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Error: {error}</Text>
+      </View>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.loadingText}>Loading solutions...</Text>
+      </View>
+    );
+  }
+
+  if (!solutions.length) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.emptyText}>No solutions found</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <Text style={styles.loadingText}>Loading solutions...</Text>
-      ) : solutions.length > 0 ? (
-        <FlatList
-          style={styles.list}
-          data={solutions}
-          renderItem={renderItem}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          keyExtractor={(item) => item.id}
-        />
-      ) : (
-        <Text style={styles.emptyText}>No solutions found</Text>
-      )}
+      <FlatList
+        style={styles.list}
+        data={solutions}
+        renderItem={renderSolutionCard}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        keyExtractor={(item) => item.id}
+      />
     </View>
   );
 }

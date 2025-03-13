@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from 'react-native';
 import { styles } from '@/styles/screens/algorithm';
 import { useEffect, useState } from 'react';
-import { getAlgorithm } from '@/app/api/algorithm';
+import { getAlgorithm } from '@/api/algorithm';
 
 export default function AlgorithmScreen() {
   const [algorithm, setAlgorithm] = useState<any>(null);
