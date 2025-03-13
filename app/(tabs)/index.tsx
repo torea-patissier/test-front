@@ -2,11 +2,16 @@ import { View } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '@/components/ui/Button';
-import { styles } from '@/styles/screens/home';
+import { createStyles } from '@/styles/screens/home';
 import { PuzzleCell } from '@/constants/Puzzle';
 import { usePuzzle } from '@/hooks/usePuzzle';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function PuzzleScreen() {
+  const colorScheme = useColorScheme() ?? 'light';
+  const styles = createStyles(colorScheme);
+
   const {
     puzzleGrid,
     userInputNumbers,
@@ -30,7 +35,8 @@ export default function PuzzleScreen() {
           onChangeText={(text) =>
             handlePuzzleCellInput(rowIndex, cellIndex, text)
           }
-          keyboardType="numeric"
+          keyboardType='numeric'
+          placeholderTextColor={Colors[colorScheme].text}
         />
       );
     }
@@ -59,7 +65,13 @@ export default function PuzzleScreen() {
             {userInputNumbers}
           </ThemedText>
           {errorMessage && (
-            <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
+            <ThemedText
+              lightColor={Colors.light.error}
+              darkColor={Colors.dark.error}
+              style={styles.errorText}
+            >
+              {errorMessage}
+            </ThemedText>
           )}
         </View>
         {puzzleGrid.map((row: PuzzleCell[], rowIndex: number) => (
