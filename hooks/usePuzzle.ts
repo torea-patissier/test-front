@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Alert } from 'react-native';
 import { postSolution } from '@/api/solutions';
-import { ErrorMessage } from '@/constants/ErrorMessage';
 import {
   PuzzleCell,
   PuzzleNumbers,
@@ -9,14 +8,21 @@ import {
   PUZZLE_INPUT_POSITIONS,
   createFreshPuzzleGrid,
 } from '@/constants/Puzzle';
+import {
+  PuzzleGridSchema,
+  PuzzleNumbersSchema,
+  PuzzleSolutionSchema,
+} from '@/constants/Zod';
+import { z } from 'zod';
 
 export const usePuzzle = () => {
   const [puzzleGrid, setPuzzleGrid] = useState<PuzzleCell[][]>(
     createFreshPuzzleGrid()
   );
-  const [userInputNumbers, setUserInputNumbers] = useState('');
+  const [userInputNumbers, setUserInputNumbers] = useState<string>('');
   const [puzzleNumbers, setPuzzleNumbers] =
     useState<PuzzleNumbers>(EMPTY_PUZZLE_NUMBERS);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const updatePuzzleNumbers = (
     currentCell: PuzzleCell,
@@ -27,9 +33,19 @@ export const usePuzzle = () => {
     const positionIndex = PUZZLE_INPUT_POSITIONS.indexOf(currentCell.inputName);
     if (positionIndex === -1) return puzzleNumbers;
 
-    const updatedPuzzleNumbers = [...puzzleNumbers];
-    updatedPuzzleNumbers[positionIndex] = Number(newValue);
-    return updatedPuzzleNumbers;
+    return puzzleNumbers.map((num, index) =>
+      index === positionIndex ? Number(newValue) : num
+    );
+  };
+
+  const validateAndUpdateGrid = (updatedGrid: PuzzleCell[][]) => {
+    try {
+      PuzzleGridSchema.parse(updatedGrid);
+      return true;
+    } catch {
+      setErrorMessage('Invalid grid update');
+      return false;
+    }
   };
 
   const handlePuzzleCellInput = (
@@ -38,65 +54,51 @@ export const usePuzzle = () => {
     newValue: string
   ) => {
     const currentCell = puzzleGrid[rowIndex][cellIndex];
+    if (!currentCell.inputName) return;
 
-    const updatedGrid = [...puzzleGrid];
-    updatedGrid[rowIndex][cellIndex] = {
-      value: newValue,
-      inputName: currentCell.inputName,
-    };
+    const updatedGrid = puzzleGrid.map((row, rIndex) =>
+      row.map((cell, cIndex) =>
+        rIndex === rowIndex && cIndex === cellIndex
+          ? { ...cell, value: newValue }
+          : cell
+      )
+    );
 
-    let updatedUserInput = userInputNumbers;
-    if (currentCell.value) {
-      updatedUserInput = updatedUserInput.replace(currentCell.value, '');
-    }
-    updatedUserInput += newValue;
+    if (!validateAndUpdateGrid(updatedGrid)) return;
+
+    const updatedUserInput = userInputNumbers
+      .replace(currentCell.value || '', '')
+      .concat(newValue);
 
     setPuzzleGrid(updatedGrid);
     setUserInputNumbers(updatedUserInput);
     setPuzzleNumbers(updatePuzzleNumbers(currentCell, newValue));
+    setErrorMessage(null);
   };
 
-  useEffect(() => {
-    console.log('\n\n puzzleNumbers:\n', puzzleNumbers);
-  }, [puzzleNumbers]);
-
   const resetPuzzle = () => {
-    setPuzzleGrid(createFreshPuzzleGrid());
+    const freshGrid = createFreshPuzzleGrid();
+    if (!validateAndUpdateGrid(freshGrid)) return;
+
+    setPuzzleGrid(freshGrid);
     setUserInputNumbers('');
-    setPuzzleNumbers(EMPTY_PUZZLE_NUMBERS);
+    setPuzzleNumbers([...EMPTY_PUZZLE_NUMBERS]);
+    setErrorMessage(null);
   };
 
   const submitPuzzleSolution = async () => {
-    if (userInputNumbers.length < 9) {
-      Alert.alert(ErrorMessage.WARNING.t, ErrorMessage.WARNING.m);
-      return;
-    }
-
-    const isValidNumbers = puzzleNumbers.every(
-      (num: number) => num >= 1 && num <= 9
-    );
-    if (!isValidNumbers) {
-      Alert.alert(ErrorMessage.INVALID_RANGE.t, ErrorMessage.INVALID_RANGE.m);
-      return;
-    }
-
-    const uniqueNumbers = new Set(puzzleNumbers);
-    if (uniqueNumbers.size !== puzzleNumbers.length) {
-      Alert.alert(
-        ErrorMessage.DUPLICATE_NUMBERS.t,
-        ErrorMessage.DUPLICATE_NUMBERS.m
-      );
-      return;
-    }
-
     try {
-      const data = { gridData: puzzleNumbers };
-      await postSolution(data);
+      PuzzleNumbersSchema.parse(puzzleNumbers);
+      const solutionData = { gridData: puzzleNumbers };
+      PuzzleSolutionSchema.parse(solutionData);
+      await postSolution(solutionData);
+      setErrorMessage(null);
     } catch (error) {
-      Alert.alert(
-        ErrorMessage.SUBMISSION_ERROR.t,
-        ErrorMessage.SUBMISSION_ERROR.m + ': ' + error
-      );
+      if (error instanceof z.ZodError) {
+        setErrorMessage(error.errors.map((err) => err.message).join(', '));
+      } else {
+        Alert.alert('Error', 'An unexpected error occurred.');
+      }
     }
   };
 
@@ -106,5 +108,6 @@ export const usePuzzle = () => {
     handlePuzzleCellInput,
     resetPuzzle,
     submitPuzzleSolution,
+    errorMessage,
   };
 };

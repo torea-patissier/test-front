@@ -13,6 +13,7 @@ export default function PuzzleScreen() {
     handlePuzzleCellInput,
     resetPuzzle,
     submitPuzzleSolution,
+    errorMessage,
   } = usePuzzle();
 
   const renderPuzzleCell = (
@@ -57,6 +58,9 @@ export default function PuzzleScreen() {
           <ThemedText style={styles.gridHeaderText}>
             {userInputNumbers}
           </ThemedText>
+          {errorMessage && (
+            <ThemedText style={styles.errorText}>{errorMessage}</ThemedText>
+          )}
         </View>
         {puzzleGrid.map((row: PuzzleCell[], rowIndex: number) => (
           <View key={rowIndex} style={styles.row}>

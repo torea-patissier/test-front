@@ -17,6 +17,12 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'semibold',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 8,
+  },
   row: {
     flexDirection: 'row',
   },
