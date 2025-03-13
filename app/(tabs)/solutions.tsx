@@ -1,8 +1,8 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
 import { getSolutions } from '@/app/api/solutions';
 
-export default function TabTwoScreen() {
+export default function SolutionsScreen() {
   const [solutions, setSolutions] = useState([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,12 +27,20 @@ export default function TabTwoScreen() {
     );
   }
 
+  const renderItem = ({ item, index }: { item: any; index: number }) => (
+    <View style={styles.solutionCard} key={index}>
+      <Text>{JSON.stringify(item)}</Text>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       {solutions.length > 0 ? (
-        solutions.map((solution, index) => (
-          <Text key={index}>{JSON.stringify(solution)}</Text>
-        ))
+        <FlatList
+          data={solutions}
+          renderItem={renderItem}
+          keyExtractor={(index) => index.toString()}
+        />
       ) : (
         <Text>Loading solutions...</Text>
       )}
@@ -45,5 +53,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  solutionCard: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 8,
+    margin: 16,
+    shadowColor: '#000',
   },
 });

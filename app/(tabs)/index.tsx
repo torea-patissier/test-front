@@ -108,6 +108,7 @@ export default function HomeScreen() {
 
     Alert.alert(ErrorMessage.CALCULATION.t, ErrorMessage.CALCULATION.m);
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.grid}>
@@ -151,6 +152,7 @@ export default function HomeScreen() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
