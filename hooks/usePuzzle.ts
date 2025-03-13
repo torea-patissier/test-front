@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { postSolution } from '@/api/solutions';
 import { ErrorMessage } from '@/constants/ErrorMessage';
@@ -7,12 +7,13 @@ import {
   PuzzleNumbers,
   EMPTY_PUZZLE_NUMBERS,
   PUZZLE_INPUT_POSITIONS,
-  EMPTY_PUZZLE_GRID,
+  createFreshPuzzleGrid,
 } from '@/constants/Puzzle';
 
 export const usePuzzle = () => {
-  const [puzzleGrid, setPuzzleGrid] =
-    useState<PuzzleCell[][]>(EMPTY_PUZZLE_GRID);
+  const [puzzleGrid, setPuzzleGrid] = useState<PuzzleCell[][]>(
+    createFreshPuzzleGrid()
+  );
   const [userInputNumbers, setUserInputNumbers] = useState('');
   const [puzzleNumbers, setPuzzleNumbers] =
     useState<PuzzleNumbers>(EMPTY_PUZZLE_NUMBERS);
@@ -55,8 +56,12 @@ export const usePuzzle = () => {
     setPuzzleNumbers(updatePuzzleNumbers(currentCell, newValue));
   };
 
+  useEffect(() => {
+    console.log('\n\n puzzleNumbers:\n', puzzleNumbers);
+  }, [puzzleNumbers]);
+
   const resetPuzzle = () => {
-    setPuzzleGrid(EMPTY_PUZZLE_GRID);
+    setPuzzleGrid(createFreshPuzzleGrid());
     setUserInputNumbers('');
     setPuzzleNumbers(EMPTY_PUZZLE_NUMBERS);
   };

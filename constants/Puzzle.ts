@@ -18,7 +18,7 @@ export const PUZZLE_INPUT_POSITIONS = [
   'I',
 ];
 
-export const EMPTY_PUZZLE_GRID: PuzzleCell[][] = [
+const INITIAL_GRID_STATE: PuzzleCell[][] = [
   [
     { value: '', inputName: 'A' },
     { value: null },
@@ -74,3 +74,13 @@ export const EMPTY_PUZZLE_GRID: PuzzleCell[][] = [
     { value: '/' },
   ],
 ];
+
+export const createFreshPuzzleGrid = (): PuzzleCell[][] => {
+  return INITIAL_GRID_STATE.map((row) =>
+    row.map((cell) => ({
+      ...cell,
+    }))
+  );
+};
+
+export const EMPTY_PUZZLE_GRID = createFreshPuzzleGrid();
