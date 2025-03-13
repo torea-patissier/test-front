@@ -1,7 +1,7 @@
-import { API_URL, API_ROUTES } from './index';
+import { API_ROUTES } from './index';
 
-export const getSolutions = async () => {
-  const response = await fetch(`${API_URL}${API_ROUTES.SOLUTIONS.GET}`, {
+export async function getSolutions() {
+  const response = await fetch(`${API_ROUTES.SOLUTIONS.GET}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -13,4 +13,4 @@ export const getSolutions = async () => {
   }
 
   return response.json();
-};
+}

@@ -1,19 +1,19 @@
-export const API_URL = `${process.env.LOCAL_API_URL}/api`;
+const ROOT_URL = 'http://localhost:9090/api';
 
-export const PARAMS = {
+const PARAMS = {
   ID: ':id',
 };
 
 export const API_ROUTES = {
   SOLUTIONS: {
-    GET: '/solutions',
-    GET_BY_ID: `solutions/${PARAMS.ID}`,
-    POST: '/solutions',
-    PUT: '/solutions',
-    DELETE: '/solutions',
-    DELETE_BY_ID: `solutions/${PARAMS.ID}`,
+    GET: `${ROOT_URL}/solutions`,
+    GET_BY_ID: `${ROOT_URL}/solutions/${PARAMS.ID}`,
+    POST: `${ROOT_URL}/solutions`,
+    PUT: `${ROOT_URL}/solutions`,
+    DELETE: `${ROOT_URL}/solutions`,
+    DELETE_BY_ID: `${ROOT_URL}/solutions/${PARAMS.ID}`,
   },
   ALGORITHMS: {
-    POST: '/calculateSolutions',
+    POST: `${ROOT_URL}/calculateSolutions`,
   },
 };
