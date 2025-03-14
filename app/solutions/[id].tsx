@@ -14,7 +14,6 @@ export default function EditSolutionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [solution, setSolution] = useState<Solution | null>(null);
   const [gridData, setGridData] = useState('');
@@ -29,11 +28,8 @@ export default function EditSolutionScreen() {
         setGridData(data.gridData.join(','));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setIsLoading(false);
       }
     };
-
     loadSolution();
   }, [id]);
 
@@ -75,23 +71,7 @@ export default function EditSolutionScreen() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.text }}>Loading...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.error }}>{error}</Text>
-      </View>
-    );
-  }
-
-  if (!solution) {
+  if (!solution || error) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text style={{ color: colors.error }}>Solution not found</Text>
@@ -105,15 +85,18 @@ export default function EditSolutionScreen() {
         elevate
         size='$4'
         bordered
-        style={[styles.card, { backgroundColor: colors.pressable }]}
+        style={[styles.card, { backgroundColor: colors.cardBackground }]}
       >
         <Card.Header padded>
           <XStack justifyContent='space-between' alignItems='center'>
-            <H2 style={{ color: colors.text }}>Edit Solution</H2>
+            <H2 style={{ color: colors.text, fontSize: 24, fontWeight: '600' }}>
+              Edit Solution
+            </H2>
             <Button
               variant='outlined'
               icon={<IconSymbol name='xmark' size={20} color={colors.text} />}
               onPress={() => router.back()}
+              style={{ borderColor: colors.border }}
             />
           </XStack>
         </Card.Header>
@@ -121,16 +104,27 @@ export default function EditSolutionScreen() {
         <Card.Footer padded>
           <YStack gap='$4' width='100%'>
             <YStack>
-              <Text style={{ color: colors.text }}>Grid Data</Text>
+              <Text style={[styles.label, { color: colors.text }]}>
+                Grid Data
+              </Text>
               <Input
                 value={gridData}
                 onChangeText={(text) => {
                   setGridData(text);
                   validateGridData(text);
                 }}
-                style={{ backgroundColor: colors.pressableActive }}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.pressable,
+                    borderColor: colors.border,
+                    color: colors.text,
+                  },
+                ]}
                 keyboardType='numeric'
                 maxLength={17}
+                placeholder='Enter grid data...'
+                placeholderTextColor={colors.tabIconDefault}
               />
               {validationError && (
                 <Text style={[styles.errorText, { color: colors.error }]}>
@@ -139,38 +133,44 @@ export default function EditSolutionScreen() {
               )}
             </YStack>
 
-            <YStack>
-              <Text style={{ color: colors.text }}>Result</Text>
-              <Text style={{ color: colors.text, fontSize: 16, marginTop: 4 }}>
+            <YStack style={styles.resultContainer}>
+              <Text style={[styles.label, { color: colors.text }]}>Result</Text>
+              <Text
+                style={[
+                  styles.resultText,
+                  {
+                    color: colors.text,
+                    backgroundColor: colors.pressable,
+                    borderColor: colors.border,
+                  },
+                ]}
+              >
                 {solution.result}
               </Text>
             </YStack>
 
-            <YStack>
-              <Text style={{ color: colors.text }}>Manual</Text>
-              <Text style={{ color: colors.text, fontSize: 16, marginTop: 4 }}>
-                {solution.algoGenerated ? 'Yes' : 'No'}
-              </Text>
-            </YStack>
-
-            <YStack>
-              <Text style={{ color: colors.text }}>Correct</Text>
-              <Text style={{ color: colors.text, fontSize: 16, marginTop: 4 }}>
-                {solution.correct ? 'Yes' : 'No'}
-              </Text>
-            </YStack>
-
-            <XStack gap='$4'>
-              <Button flex={1} variant='outlined' onPress={() => router.back()}>
-                Cancel
+            <XStack gap='$4' style={styles.buttonContainer}>
+              <Button
+                flex={1}
+                variant='outlined'
+                onPress={() => router.back()}
+                style={{ borderColor: colors.border }}
+              >
+                <Text style={{ color: colors.text }}>Cancel</Text>
               </Button>
               <Button
                 flex={1}
                 theme='active'
                 onPress={handleUpdate}
                 disabled={!!validationError}
+                style={{
+                  backgroundColor: validationError
+                    ? colors.tabIconDefault
+                    : colors.tint,
+                  opacity: validationError ? 0.5 : 1,
+                }}
               >
-                Update
+                <Text style={{ color: colors.background }}>Update</Text>
               </Button>
             </XStack>
           </YStack>
@@ -187,9 +187,44 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
+    borderRadius: 12,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  input: {
+    height: 45,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    fontSize: 16,
   },
   errorText: {
     fontSize: 14,
-    marginTop: 4,
+    marginTop: 8,
+    fontWeight: '500',
+  },
+  resultContainer: {
+    marginTop: 8,
+  },
+  resultText: {
+    fontSize: 18,
+    fontWeight: '600',
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  buttonContainer: {
+    marginTop: 16,
   },
 });

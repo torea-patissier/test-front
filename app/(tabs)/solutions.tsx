@@ -188,6 +188,7 @@ export default function SolutionsScreen() {
                       <AlertDialog.Action asChild>
                         <Button
                           theme='active'
+                          style={styles.updateButton}
                           onPress={() => {
                             router.push(`/solutions/${item.id}`);
                           }}
@@ -347,5 +348,9 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  updateButton: {
+    backgroundColor: Colors.light.tint,
+    color: Colors.light.background,
   },
 });
