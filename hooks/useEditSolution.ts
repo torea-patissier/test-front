@@ -3,8 +3,8 @@ import { router } from 'expo-router';
 import { updateSolutionById, getSolutionById } from '@/api/solutions';
 import { PuzzleSolutionSchema } from '@/constants/Zod';
 import { ZodError } from 'zod';
-import { Solution } from '@/types/solutions';
-import { UseEditSolutionReturn } from '@/types/editSolution';
+import { Solution } from '@/types/solutions/solutions';
+import { UseEditSolutionReturn } from '@/types/solutions/editSolution';
 
 export const useEditSolution = (props: {
   id: string;

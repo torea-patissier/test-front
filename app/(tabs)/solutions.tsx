@@ -1,67 +1,32 @@
-import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import { useState, useCallback } from 'react';
-import {
-  getSolutions,
-  deleteSolutionById,
-  deleteAllSolutions,
-} from '@/api/solutions';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 import { Card, H2, XStack, YStack, Text, Button, AlertDialog } from 'tamagui';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { useFocusEffect } from '@react-navigation/native';
-import { Solution } from '@/types/solutions';
-import { router } from 'expo-router';
+import { Solution } from '@/types/solutions/solutions';
+import { styles } from '@/styles/screens/solutions';
+import { useSolutions } from '@/hooks/useSolutions';
+import { useCallback } from 'react';
 
 export default function SolutionsScreen() {
-  const [solutions, setSolutions] = useState<Solution[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    solutions,
+    error,
+    isLoading,
+    handleDeleteSolution: handleDeleteSolutionbyId,
+    handleDeleteAllSolutions,
+    handleUpdateSolution,
+    fetchSolutions,
+  } = useSolutions();
+
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
-
-  const handleDeleteSolutionbyId = useCallback(async (id: string) => {
-    try {
-      await deleteSolutionById(id);
-      setSolutions((prevSolutions) =>
-        prevSolutions.filter((solution) => solution.id !== id)
-      );
-    } catch (err) {
-      console.error('Error deleting solution:', err);
-      setError(
-        err instanceof Error ? err.message : 'Failed to delete solution'
-      );
-    }
-  }, []);
-
-  const handleDeleteAllSolutions = useCallback(async () => {
-    try {
-      await deleteAllSolutions();
-      setSolutions([]);
-    } catch (err) {
-      console.error('Error deleting all solutions:', err);
-      setError(
-        err instanceof Error ? err.message : 'Failed to delete all solutions'
-      );
-    }
-  }, []);
-
-  const fetchSolutions = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getSolutions();
-      setSolutions(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useFocusEffect(
     useCallback(() => {
       fetchSolutions();
-    }, [])
+    }, [fetchSolutions])
   );
 
   const StatusBadge = useCallback(
@@ -189,9 +154,7 @@ export default function SolutionsScreen() {
                         <Button
                           theme='active'
                           style={styles.updateButton}
-                          onPress={() => {
-                            router.push(`/solutions/${item.id}`);
-                          }}
+                          onPress={() => handleUpdateSolution(item.id)}
                         >
                           Update
                         </Button>
@@ -205,7 +168,7 @@ export default function SolutionsScreen() {
         </Card.Footer>
       </Card>
     ),
-    [colors]
+    [colors, handleDeleteSolutionbyId, handleUpdateSolution]
   );
 
   if (isLoading) {
@@ -289,68 +252,3 @@ export default function SolutionsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-  },
-  headerActions: {
-    width: '100%',
-    justifyContent: 'flex-end',
-    paddingVertical: 8,
-  },
-  solutionCard: {
-    marginVertical: 8,
-    borderWidth: 1,
-    borderLeftWidth: 4,
-  },
-  cardHeader: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  cardFooter: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  badge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    alignItems: 'center',
-    gap: 4,
-  },
-  badgeText: {
-    color: Colors.light.background,
-    fontSize: 14,
-  },
-  gridDataContainer: {
-    padding: 12,
-    borderRadius: 8,
-  },
-  gridDataText: {
-    fontFamily: 'SpaceMono',
-    fontSize: 16,
-  },
-  list: {
-    width: '100%',
-    marginBottom: 80,
-  },
-  listContent: {
-    paddingVertical: 8,
-  },
-  errorText: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  emptyText: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  updateButton: {
-    backgroundColor: Colors.light.tint,
-    color: Colors.light.background,
-  },
-});

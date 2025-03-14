@@ -1,4 +1,4 @@
-import { PuzzleCell } from '@/types/puzzle';
+import { PuzzleCell } from '@/types/solutions/puzzle';
 
 export const EMPTY_PUZZLE_NUMBERS = Array(9).fill(0);
 

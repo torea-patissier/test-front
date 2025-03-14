@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { postSolution } from '@/api/solutions';
-import { PuzzleCell, PuzzleNumbers } from '@/types/puzzle';
+import { PuzzleCell, PuzzleNumbers } from '@/types/solutions/puzzle';
 import {
   EMPTY_PUZZLE_NUMBERS,
   PUZZLE_INPUT_POSITIONS,

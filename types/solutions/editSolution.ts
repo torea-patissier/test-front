@@ -1,4 +1,4 @@
-import { Solution } from '@/types/solutions';
+import { Solution } from '@/types/solutions/solutions';
 
 export interface UseEditSolutionReturn {
   error: string | null;
