@@ -1,5 +1,5 @@
 import { View, StyleSheet } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Card, H2, XStack, YStack, Text, Button, Input } from 'tamagui';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -7,6 +7,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { Solution } from '@/types/solutions';
 import { updateSolutionById, getSolutionById } from '@/api/solutions';
+import { PuzzleSolutionSchema } from '@/constants/Zod';
+import { ZodError } from 'zod';
 
 export default function EditSolutionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -16,9 +18,10 @@ export default function EditSolutionScreen() {
   const [error, setError] = useState<string | null>(null);
   const [solution, setSolution] = useState<Solution | null>(null);
   const [gridData, setGridData] = useState('');
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadSolution() {
+    const loadSolution = async () => {
       if (!id) return;
       try {
         const data = await getSolutionById(id);
@@ -29,24 +32,48 @@ export default function EditSolutionScreen() {
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     loadSolution();
   }, [id]);
 
-  async function handleUpdate() {
+  const validateGridData = useCallback((data: string): number[] | null => {
     try {
-      const gridDataArray = gridData
+      const gridDataArray = data
         .split(',')
-        .map((num) => parseInt(num.trim()));
-      await updateSolutionById(id, { gridData: gridDataArray });
+        .map((num) => parseInt(num.trim()))
+        .filter((num) => !isNaN(num));
+
+      const validatedData = PuzzleSolutionSchema.parse({
+        gridData: gridDataArray,
+      });
+      setValidationError(null);
+      return validatedData.gridData;
+    } catch (err) {
+      if (err instanceof ZodError) {
+        setValidationError(err.errors[0].message);
+      } else {
+        setValidationError('Invalid grid data format');
+      }
+      return null;
+    }
+  }, []);
+
+  const handleUpdate = async () => {
+    const validatedGridData = validateGridData(gridData);
+    if (!validatedGridData) {
+      return;
+    }
+
+    try {
+      await updateSolutionById(id, { gridData: validatedGridData });
       router.back();
     } catch (err) {
       setError(
         err instanceof Error ? err.message : 'Failed to update solution'
       );
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -97,9 +124,19 @@ export default function EditSolutionScreen() {
               <Text style={{ color: colors.text }}>Grid Data</Text>
               <Input
                 value={gridData}
-                onChangeText={setGridData}
+                onChangeText={(text) => {
+                  setGridData(text);
+                  validateGridData(text);
+                }}
                 style={{ backgroundColor: colors.pressableActive }}
+                keyboardType='numeric'
+                maxLength={17}
               />
+              {validationError && (
+                <Text style={[styles.errorText, { color: colors.error }]}>
+                  {validationError}
+                </Text>
+              )}
             </YStack>
 
             <YStack>
@@ -110,7 +147,7 @@ export default function EditSolutionScreen() {
             </YStack>
 
             <YStack>
-              <Text style={{ color: colors.text }}>Algo Generated</Text>
+              <Text style={{ color: colors.text }}>Manual</Text>
               <Text style={{ color: colors.text, fontSize: 16, marginTop: 4 }}>
                 {solution.algoGenerated ? 'Yes' : 'No'}
               </Text>
@@ -127,7 +164,12 @@ export default function EditSolutionScreen() {
               <Button flex={1} variant='outlined' onPress={() => router.back()}>
                 Cancel
               </Button>
-              <Button flex={1} theme='active' onPress={handleUpdate}>
+              <Button
+                flex={1}
+                theme='active'
+                onPress={handleUpdate}
+                disabled={!!validationError}
+              >
                 Update
               </Button>
             </XStack>
@@ -145,5 +187,9 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
+  },
+  errorText: {
+    fontSize: 14,
+    marginTop: 4,
   },
 });
