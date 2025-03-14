@@ -4,17 +4,7 @@ import { updateSolutionById, getSolutionById } from '@/api/solutions';
 import { PuzzleSolutionSchema } from '@/constants/Zod';
 import { ZodError } from 'zod';
 import { Solution } from '@/types/solutions';
-
-interface UseEditSolutionReturn {
-  error: string | null;
-  solution: Solution | null;
-  gridData: string;
-  validationError: string | null;
-  // eslint-disable-next-line no-unused-vars
-  handleGridDataChange: (text: string) => void;
-  handleUpdate: () => Promise<void>;
-  handleCancel: () => void;
-}
+import { UseEditSolutionReturn } from '@/types/editSolution';
 
 export const useEditSolution = (props: {
   id: string;
