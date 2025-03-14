@@ -10,7 +10,7 @@ import {
 } from '@/constants/Puzzle';
 import { PuzzleNumbersSchema, PuzzleSolutionSchema } from '@/constants/Zod';
 import { z } from 'zod';
-
+import { InfoMessage, ErrorMessage } from '@/constants/ErrorMessage';
 export const usePuzzle = () => {
   const [puzzleGrid, setPuzzleGrid] = useState<PuzzleCell[][]>(
     createFreshPuzzleGrid()
@@ -74,9 +74,24 @@ export const usePuzzle = () => {
       PuzzleNumbersSchema.parse(puzzleNumbers);
       const solutionData = { gridData: puzzleNumbers };
       PuzzleSolutionSchema.parse(solutionData);
-      await postSolution(solutionData);
+      const response = await postSolution(solutionData);
+
+      const updatedGrid = puzzleGrid.map((row, rowIndex) =>
+        row.map((cell) =>
+          rowIndex === 0 && cell.result === 'result'
+            ? { ...cell, value: response.result.toString() }
+            : cell
+        )
+      );
+
+      setPuzzleGrid(updatedGrid);
       setErrorMessage(null);
-      Alert.alert('Success !', 'Solution submitted successfully.');
+
+      if (response.result === 66 && response.ok) {
+        Alert.alert(InfoMessage.SUCCESS.t, InfoMessage.SUCCESS.m);
+      } else {
+        Alert.alert(InfoMessage.FALSE.t, InfoMessage.FALSE.m);
+      }
     } catch (error) {
       console.log('error', error);
       if (error instanceof z.ZodError) {
@@ -85,7 +100,10 @@ export const usePuzzle = () => {
         ];
         setErrorMessage(uniqueMessages[0]);
       } else {
-        Alert.alert('Error', 'An unexpected error occurred.');
+        Alert.alert(
+          ErrorMessage.SUBMISSION_ERROR.t,
+          ErrorMessage.SUBMISSION_ERROR.m
+        );
       }
     }
   };

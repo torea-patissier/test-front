@@ -33,3 +33,14 @@ export const ErrorMessage = {
     m: 'Failed to submit solution',
   },
 };
+
+export const InfoMessage = {
+  SUCCESS: {
+    t: 'Success',
+    m: 'Solution is correct',
+  },
+  FALSE: {
+    t: 'False',
+    m: 'Solution is not correct',
+  },
+};

@@ -1,6 +1,7 @@
 export interface PuzzleCell {
   value: string | null;
   inputName?: string | null;
+  result?: string;
 }
 export type PuzzleNumbers = number[];
 
@@ -26,7 +27,7 @@ const INITIAL_GRID_STATE: PuzzleCell[][] = [
     { value: '-' },
     { value: '', inputName: 'F' },
     { value: null },
-    { value: '66' },
+    { value: '66', result: 'result' },
   ],
   [
     { value: '+' },
