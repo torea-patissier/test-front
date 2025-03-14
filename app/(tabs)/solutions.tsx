@@ -1,7 +1,16 @@
 import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { useEffect, useState, useCallback } from 'react';
 import { getSolutions } from '@/api/solutions';
-import { Card, H2, Paragraph, XStack, YStack, Text, Button } from 'tamagui';
+import {
+  Card,
+  H2,
+  Paragraph,
+  XStack,
+  YStack,
+  Text,
+  Button,
+  AlertDialog,
+} from 'tamagui';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
@@ -117,15 +126,51 @@ export default function SolutionsScreen() {
         <Card.Footer padded>
           <XStack style={styles.cardFooter}>
             <Text style={{ color: colors.tabIconDefault }}>ID: {item.id}</Text>
-            <Button
-              size='$3'
-              variant='outlined'
-              onPress={() => {
-                /* Handle details navigation */
-              }}
-            >
-              Edit
-            </Button>
+            <AlertDialog>
+              <AlertDialog.Trigger asChild>
+                <Button size='$3' variant='outlined'>
+                  Edit
+                </Button>
+              </AlertDialog.Trigger>
+              <AlertDialog.Portal>
+                <AlertDialog.Overlay
+                  key='overlay'
+                  animation='unset'
+                  opacity={1}
+                />
+                <AlertDialog.Content>
+                  <YStack gap='$3'>
+                    <AlertDialog.Title>Edit Solution</AlertDialog.Title>
+                    <AlertDialog.Description>
+                      Choose an action for this solution
+                    </AlertDialog.Description>
+
+                    <XStack gap='$3' justifyContent='flex-end'>
+                      <AlertDialog.Cancel asChild>
+                        <Button
+                          variant='outlined'
+                          onPress={() => {
+                            console.log('DELETE');
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </AlertDialog.Cancel>
+                      <AlertDialog.Action asChild>
+                        <Button
+                          theme='active'
+                          onPress={() => {
+                            console.log('UPDATE');
+                          }}
+                        >
+                          Update
+                        </Button>
+                      </AlertDialog.Action>
+                    </XStack>
+                  </YStack>
+                </AlertDialog.Content>
+              </AlertDialog.Portal>
+            </AlertDialog>
           </XStack>
         </Card.Footer>
       </Card>
