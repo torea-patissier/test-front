@@ -10,14 +10,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { useFocusEffect } from '@react-navigation/native';
-
-interface Solution {
-  id: string;
-  gridData: string;
-  result: number;
-  algoGenerated: boolean;
-  correct: boolean;
-}
+import { Solution } from '@/types/solutions';
 
 export default function SolutionsScreen() {
   const [solutions, setSolutions] = useState<Solution[]>([]);
@@ -52,19 +45,21 @@ export default function SolutionsScreen() {
     }
   }, []);
 
+  const fetchSolutions = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getSolutions();
+      console.log('data', data);
+      setSolutions(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const fetchSolutions = async () => {
-        try {
-          setIsLoading(true);
-          const data = await getSolutions();
-          setSolutions(data);
-        } catch (err) {
-          setError(err instanceof Error ? err.message : 'An error occurred');
-        } finally {
-          setIsLoading(false);
-        }
-      };
       fetchSolutions();
     }, [])
   );
@@ -234,20 +229,56 @@ export default function SolutionsScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <XStack style={styles.headerActions}>
-        <Button
-          variant='outlined'
-          color='red'
-          onPress={handleDeleteAllSolutions}
-          size='$1'
-          icon={<IconSymbol name='trash' size={20} color={colors.error} />}
-        ></Button>
+        <AlertDialog>
+          <AlertDialog.Trigger asChild>
+            <Button
+              variant='outlined'
+              color='red'
+              size='$1'
+              icon={<IconSymbol name='trash' size={20} color={colors.error} />}
+            />
+          </AlertDialog.Trigger>
+          <AlertDialog.Portal>
+            <AlertDialog.Overlay key='overlay' animation='unset' opacity={1} />
+            <AlertDialog.Content>
+              <YStack gap='$3'>
+                <XStack justifyContent='space-between' alignItems='center'>
+                  <AlertDialog.Title>Delete All Solutions</AlertDialog.Title>
+                  <AlertDialog.Cancel asChild>
+                    <Button
+                      variant='outlined'
+                      icon={
+                        <IconSymbol
+                          name='xmark'
+                          size={20}
+                          color={colors.text}
+                        />
+                      }
+                    />
+                  </AlertDialog.Cancel>
+                </XStack>
+                <AlertDialog.Description>
+                  Are you sure you want to delete all solutions?
+                </AlertDialog.Description>
+
+                <XStack gap='$3' justifyContent='flex-end'>
+                  <AlertDialog.Action asChild>
+                    <Button color='red' onPress={handleDeleteAllSolutions}>
+                      Delete All
+                    </Button>
+                  </AlertDialog.Action>
+                </XStack>
+              </YStack>
+            </AlertDialog.Content>
+          </AlertDialog.Portal>
+        </AlertDialog>
       </XStack>
       <FlatList
         style={styles.list}
         data={solutions}
         renderItem={renderSolutionCard}
         initialNumToRender={10}
-        maxToRenderPerBatch={10}
+        maxToRenderPerBatch={8}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
       />

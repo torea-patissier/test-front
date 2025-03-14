@@ -1,9 +1,4 @@
-export interface PuzzleCell {
-  value: string | null;
-  inputName?: string | null;
-  result?: string;
-}
-export type PuzzleNumbers = number[];
+import { PuzzleCell } from '@/types/puzzle';
 
 export const EMPTY_PUZZLE_NUMBERS = Array(9).fill(0);
 

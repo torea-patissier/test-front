@@ -3,7 +3,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '@/components/ui/Button';
 import { createStyles } from '@/styles/screens/home';
-import { PuzzleCell } from '@/constants/Puzzle';
+import { PuzzleCell } from '@/types/puzzle';
 import { usePuzzle } from '@/hooks/usePuzzle';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
