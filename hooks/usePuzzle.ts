@@ -11,6 +11,7 @@ import {
 import { PuzzleNumbersSchema, PuzzleSolutionSchema } from '@/constants/Zod';
 import { z } from 'zod';
 import { InfoMessage, ErrorMessage } from '@/constants/ErrorMessage';
+import { PUZZLE_RESULT } from '@/constants/Puzzle';
 export const usePuzzle = () => {
   const [puzzleGrid, setPuzzleGrid] = useState<PuzzleCell[][]>(
     createFreshPuzzleGrid()
@@ -87,7 +88,7 @@ export const usePuzzle = () => {
       setPuzzleGrid(updatedGrid);
       setErrorMessage(null);
 
-      if (response.result === 66 && response.ok) {
+      if (response.result === PUZZLE_RESULT && response.ok) {
         Alert.alert(InfoMessage.SUCCESS.t, InfoMessage.SUCCESS.m);
       } else {
         Alert.alert(InfoMessage.FALSE.t, InfoMessage.FALSE.m);

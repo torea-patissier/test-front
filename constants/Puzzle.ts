@@ -7,6 +7,8 @@ export type PuzzleNumbers = number[];
 
 export const EMPTY_PUZZLE_NUMBERS = Array(9).fill(0);
 
+export const PUZZLE_RESULT = 66;
+
 export const PUZZLE_INPUT_POSITIONS = [
   'A',
   'B',
@@ -27,7 +29,7 @@ const INITIAL_GRID_STATE: PuzzleCell[][] = [
     { value: '-' },
     { value: '', inputName: 'F' },
     { value: null },
-    { value: '66', result: 'result' },
+    { value: PUZZLE_RESULT.toString(), result: 'result' },
   ],
   [
     { value: '+' },
