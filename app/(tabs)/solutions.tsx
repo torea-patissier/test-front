@@ -8,6 +8,7 @@ import { Solution } from '@/types/solutions/solutions';
 import { styles } from '@/styles/screens/solutions';
 import { useSolutions } from '@/hooks/useSolutions';
 import { useCallback } from 'react';
+import { StatusBadge } from '@/components/solutions/StatusBadge';
 
 export default function SolutionsScreen() {
   const {
@@ -27,22 +28,6 @@ export default function SolutionsScreen() {
     useCallback(() => {
       fetchSolutions();
     }, [fetchSolutions])
-  );
-
-  const StatusBadge = useCallback(
-    ({ success }: { success: boolean }) => (
-      <XStack
-        style={[
-          styles.badge,
-          {
-            backgroundColor: success ? colors.success : colors.error,
-          },
-        ]}
-      >
-        <Text style={styles.badgeText}>{success ? 'Success' : 'Failed'}</Text>
-      </XStack>
-    ),
-    [colors]
   );
 
   const TypeBadge = useCallback(
