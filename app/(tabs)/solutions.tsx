@@ -1,5 +1,5 @@
 import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
-import { useEffect, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { getSolutions, deleteSolutionById } from '@/api/solutions';
 import {
   Card,
@@ -14,6 +14,7 @@ import {
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Solution {
   id: string;
@@ -44,20 +45,22 @@ export default function SolutionsScreen() {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchSolutions = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getSolutions();
-        setSolutions(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchSolutions();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchSolutions = async () => {
+        try {
+          setIsLoading(true);
+          const data = await getSolutions();
+          setSolutions(data);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'An error occurred');
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchSolutions();
+    }, [])
+  );
 
   const StatusBadge = useCallback(
     ({ success }: { success: boolean }) => (
@@ -69,11 +72,6 @@ export default function SolutionsScreen() {
           },
         ]}
       >
-        <IconSymbol
-          name={success ? 'checkmark' : 'exclamationmark.triangle.fill'}
-          size={14}
-          color={colors.background}
-        />
         <Text style={styles.badgeText}>{success ? 'Success' : 'Failed'}</Text>
       </XStack>
     ),
@@ -277,7 +275,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   badgeText: {
-    color: '#FFFFFF',
+    color: Colors.light.background,
     fontSize: 14,
   },
   gridDataContainer: {
