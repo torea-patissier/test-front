@@ -101,10 +101,10 @@ export default function SolutionsScreen() {
         ]}
       >
         <Card.Header padded>
-          <YStack space={8}>
+          <YStack gap={8}>
             <XStack justifyContent='space-between' alignItems='center'>
               <H2 style={{ color: colors.text }}>Result: {item.result}</H2>
-              <XStack space={8}>
+              <XStack gap={8}>
                 <StatusBadge success={item.correct} />
                 <TypeBadge isAlgorithm={item.algoGenerated} />
               </XStack>
