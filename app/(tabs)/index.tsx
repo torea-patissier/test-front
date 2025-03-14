@@ -60,9 +60,6 @@ export default function PuzzleScreen() {
         <View style={styles.grid}>
           <View style={styles.gridHeader}>
             <ThemedText style={styles.gridHeaderText}>
-              Entered numbers:
-            </ThemedText>
-            <ThemedText style={styles.gridHeaderText}>
               {userInputNumbers}
             </ThemedText>
             {errorMessage && (

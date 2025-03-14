@@ -39,23 +39,19 @@ export default function SolutionsScreen() {
   const StatusBadge = useCallback(
     ({ success }: { success: boolean }) => (
       <XStack
-        style={{
-          backgroundColor: success ? colors.success : colors.error,
-          paddingHorizontal: 12,
-          paddingVertical: 6,
-          borderRadius: 8,
-          alignItems: 'center',
-          gap: 4,
-        }}
+        style={[
+          styles.badge,
+          {
+            backgroundColor: success ? colors.success : colors.error,
+          },
+        ]}
       >
         <IconSymbol
           name={success ? 'checkmark' : 'exclamationmark.triangle.fill'}
           size={14}
           color={colors.background}
         />
-        <Text style={{ color: colors.background, fontSize: 14 }}>
-          {success ? 'Success' : 'Failed'}
-        </Text>
+        <Text style={styles.badgeText}>{success ? 'Success' : 'Failed'}</Text>
       </XStack>
     ),
     [colors]
@@ -64,20 +60,14 @@ export default function SolutionsScreen() {
   const TypeBadge = useCallback(
     ({ isAlgorithm }: { isAlgorithm: boolean }) => (
       <XStack
-        style={{
-          backgroundColor: isAlgorithm ? colors.primary : colors.tint,
-          paddingHorizontal: 12,
-          paddingVertical: 6,
-          borderRadius: 8,
-          alignItems: 'center',
-        }}
+        style={[
+          styles.badge,
+          {
+            backgroundColor: isAlgorithm ? colors.primary : colors.tint,
+          },
+        ]}
       >
-        <Text
-          style={{
-            color: colors.background,
-            fontSize: 14,
-          }}
-        >
+        <Text style={styles.badgeText}>
           {isAlgorithm ? 'Algorithm' : 'Manual'}
         </Text>
       </XStack>
@@ -95,14 +85,13 @@ export default function SolutionsScreen() {
           styles.solutionCard,
           {
             borderColor: item.correct ? colors.success : colors.error,
-            borderLeftWidth: 4,
             backgroundColor: colors.pressable,
           },
         ]}
       >
         <Card.Header padded>
           <YStack gap={8}>
-            <XStack justifyContent='space-between' alignItems='center'>
+            <XStack style={styles.cardHeader}>
               <H2 style={{ color: colors.text }}>Result: {item.result}</H2>
               <XStack gap={8}>
                 <StatusBadge success={item.correct} />
@@ -111,19 +100,14 @@ export default function SolutionsScreen() {
             </XStack>
 
             <YStack
-              style={{
-                backgroundColor: colors.pressableActive,
-                padding: 12,
-                borderRadius: 8,
-              }}
+              style={[
+                styles.gridDataContainer,
+                {
+                  backgroundColor: colors.pressableActive,
+                },
+              ]}
             >
-              <Text
-                style={{
-                  fontFamily: 'SpaceMono',
-                  fontSize: 16,
-                  color: colors.text,
-                }}
-              >
+              <Text style={[styles.gridDataText, { color: colors.text }]}>
                 [{item.gridData}]
               </Text>
             </YStack>
@@ -131,7 +115,7 @@ export default function SolutionsScreen() {
         </Card.Header>
 
         <Card.Footer padded>
-          <XStack justifyContent='space-between' alignItems='center'>
+          <XStack style={styles.cardFooter}>
             <Text style={{ color: colors.tabIconDefault }}>ID: {item.id}</Text>
             <Button
               size='$3'
@@ -140,7 +124,7 @@ export default function SolutionsScreen() {
                 /* Handle details navigation */
               }}
             >
-              Details
+              Edit
             </Button>
           </XStack>
         </Card.Footer>
@@ -200,6 +184,34 @@ const styles = StyleSheet.create({
   solutionCard: {
     marginVertical: 8,
     borderWidth: 1,
+    borderLeftWidth: 4,
+  },
+  cardHeader: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardFooter: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  badge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    alignItems: 'center',
+    gap: 4,
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+  },
+  gridDataContainer: {
+    padding: 12,
+    borderRadius: 8,
+  },
+  gridDataText: {
+    fontFamily: 'SpaceMono',
+    fontSize: 16,
   },
   list: {
     width: '100%',
