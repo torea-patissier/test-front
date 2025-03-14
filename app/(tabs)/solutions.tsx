@@ -140,22 +140,26 @@ export default function SolutionsScreen() {
                 />
                 <AlertDialog.Content>
                   <YStack gap='$3'>
-                    <AlertDialog.Title>Edit Solution</AlertDialog.Title>
+                    <AlertDialog.Title>Actions</AlertDialog.Title>
                     <AlertDialog.Description>
                       Choose an action for this solution
                     </AlertDialog.Description>
 
                     <XStack gap='$3' justifyContent='flex-end'>
                       <AlertDialog.Cancel asChild>
+                        <Button variant='outlined'>Cancel</Button>
+                      </AlertDialog.Cancel>
+                      <AlertDialog.Action asChild>
                         <Button
                           variant='outlined'
+                          color='red'
                           onPress={() => {
                             console.log('DELETE');
                           }}
                         >
                           Delete
                         </Button>
-                      </AlertDialog.Cancel>
+                      </AlertDialog.Action>
                       <AlertDialog.Action asChild>
                         <Button
                           theme='active'
