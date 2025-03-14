@@ -263,7 +263,11 @@ export default function SolutionsScreen() {
 
                 <XStack gap='$3' justifyContent='flex-end'>
                   <AlertDialog.Action asChild>
-                    <Button color='red' onPress={handleDeleteAllSolutions}>
+                    <Button
+                      color='red'
+                      variant='outlined'
+                      onPress={handleDeleteAllSolutions}
+                    >
                       Delete All
                     </Button>
                   </AlertDialog.Action>
