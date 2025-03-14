@@ -1,6 +1,6 @@
 import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { useEffect, useState, useCallback } from 'react';
-import { getSolutions } from '@/api/solutions';
+import { getSolutions, deleteSolutionById } from '@/api/solutions';
 import {
   Card,
   H2,
@@ -29,6 +29,20 @@ export default function SolutionsScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
+
+  const deleteSolution = useCallback(async (id: string) => {
+    try {
+      await deleteSolutionById(id);
+      setSolutions((prevSolutions) =>
+        prevSolutions.filter((solution) => solution.id !== id)
+      );
+    } catch (err) {
+      console.error('Error deleting solution:', err);
+      setError(
+        err instanceof Error ? err.message : 'Failed to delete solution'
+      );
+    }
+  }, []);
 
   useEffect(() => {
     const fetchSolutions = async () => {
@@ -140,21 +154,33 @@ export default function SolutionsScreen() {
                 />
                 <AlertDialog.Content>
                   <YStack gap='$3'>
-                    <AlertDialog.Title>Actions</AlertDialog.Title>
+                    <XStack justifyContent='space-between' alignItems='center'>
+                      <AlertDialog.Title>Actions</AlertDialog.Title>
+                      <AlertDialog.Cancel asChild>
+                        <Button
+                          variant='outlined'
+                          icon={
+                            <IconSymbol
+                              name='xmark'
+                              size={20}
+                              color={colors.text}
+                            />
+                          }
+                        />
+                      </AlertDialog.Cancel>
+                    </XStack>
                     <AlertDialog.Description>
                       Choose an action for this solution
                     </AlertDialog.Description>
 
                     <XStack gap='$3' justifyContent='flex-end'>
-                      <AlertDialog.Cancel asChild>
-                        <Button variant='outlined'>Cancel</Button>
-                      </AlertDialog.Cancel>
                       <AlertDialog.Action asChild>
                         <Button
                           variant='outlined'
                           color='red'
                           onPress={() => {
-                            console.log('DELETE');
+                            console.log('item.id', item.id);
+                            deleteSolution(item.id);
                           }}
                         >
                           Delete
@@ -264,6 +290,7 @@ const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
+    marginBottom: 80,
   },
   listContent: {
     paddingVertical: 8,
