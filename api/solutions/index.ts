@@ -9,7 +9,7 @@ export async function getSolutions() {
   });
 
   if (!response.ok) {
-    throw new Error('Erreur lors de la récupération des solutions');
+    throw new Error('Failed to fetch solutions');
   }
 
   return response.json();
@@ -25,7 +25,7 @@ export async function postSolution(solution: { gridData: number[] }) {
   });
 
   if (!response.ok) {
-    throw new Error('Erreur lors de la publication de la solution');
+    throw new Error('Failed to create solution');
   }
   return response.json();
 }
@@ -42,7 +42,7 @@ export async function deleteSolutionById(id: string) {
   );
 
   if (!response.ok) {
-    throw new Error('Erreur lors de la suppression de la solution');
+    throw new Error('Failed to delete solution');
   }
 
   return true;
@@ -57,10 +57,10 @@ export async function deleteAllSolutions() {
   });
 
   if (!response.ok) {
-    throw new Error('Erreur lors de la suppression de toutes les solutions');
+    throw new Error('Failed to delete all solutions');
   }
 
-  return response.text().then((text) => (text ? JSON.parse(text) : {}));
+  return true;
 }
 
 export async function updateSolutionById(
@@ -76,7 +76,7 @@ export async function updateSolutionById(
   });
 
   if (!response.ok) {
-    throw new Error('Erreur lors de la mise à jour de la solution');
+    throw new Error('Failed to update solution');
   }
 
   return response.json();

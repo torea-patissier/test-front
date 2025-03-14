@@ -1,16 +1,11 @@
 import { View, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
 import { useState, useCallback } from 'react';
-import { getSolutions, deleteSolutionById } from '@/api/solutions';
 import {
-  Card,
-  H2,
-  Paragraph,
-  XStack,
-  YStack,
-  Text,
-  Button,
-  AlertDialog,
-} from 'tamagui';
+  getSolutions,
+  deleteSolutionById,
+  deleteAllSolutions,
+} from '@/api/solutions';
+import { Card, H2, XStack, YStack, Text, Button, AlertDialog } from 'tamagui';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
@@ -31,7 +26,7 @@ export default function SolutionsScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
 
-  const deleteSolution = useCallback(async (id: string) => {
+  const handleDeleteSolutionbyId = useCallback(async (id: string) => {
     try {
       await deleteSolutionById(id);
       setSolutions((prevSolutions) =>
@@ -41,6 +36,18 @@ export default function SolutionsScreen() {
       console.error('Error deleting solution:', err);
       setError(
         err instanceof Error ? err.message : 'Failed to delete solution'
+      );
+    }
+  }, []);
+
+  const handleDeleteAllSolutions = useCallback(async () => {
+    try {
+      await deleteAllSolutions();
+      setSolutions([]);
+    } catch (err) {
+      console.error('Error deleting all solutions:', err);
+      setError(
+        err instanceof Error ? err.message : 'Failed to delete all solutions'
       );
     }
   }, []);
@@ -178,7 +185,7 @@ export default function SolutionsScreen() {
                           color='red'
                           onPress={() => {
                             console.log('item.id', item.id);
-                            deleteSolution(item.id);
+                            handleDeleteSolutionbyId(item.id);
                           }}
                         >
                           Delete
@@ -214,15 +221,7 @@ export default function SolutionsScreen() {
     );
   }
 
-  if (error) {
-    return (
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Paragraph style={{ color: colors.error }}>Error: {error}</Paragraph>
-      </View>
-    );
-  }
-
-  if (!solutions.length) {
+  if (!solutions.length || error) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Text style={[styles.emptyText, { color: colors.tabIconDefault }]}>
@@ -234,6 +233,15 @@ export default function SolutionsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <XStack style={styles.headerActions}>
+        <Button
+          variant='outlined'
+          color='red'
+          onPress={handleDeleteAllSolutions}
+          size='$1'
+          icon={<IconSymbol name='trash' size={20} color={colors.error} />}
+        ></Button>
+      </XStack>
       <FlatList
         style={styles.list}
         data={solutions}
@@ -253,6 +261,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
+  },
+  headerActions: {
+    width: '100%',
+    justifyContent: 'flex-end',
+    paddingVertical: 8,
   },
   solutionCard: {
     marginVertical: 8,
