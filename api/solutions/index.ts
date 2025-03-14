@@ -15,6 +15,24 @@ export async function getSolutions() {
   return response.json();
 }
 
+export async function getSolutionById(id: string) {
+  const response = await fetch(
+    `${API_ROUTES.SOLUTIONS.GET_BY_ID.replace(':id', id)}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to get solution');
+  }
+
+  return response.json();
+}
+
 export async function postSolution(solution: { gridData: number[] }) {
   const response = await fetch(`${API_ROUTES.SOLUTIONS.POST}`, {
     method: 'POST',

@@ -11,6 +11,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { useFocusEffect } from '@react-navigation/native';
 import { Solution } from '@/types/solutions';
+import { router } from 'expo-router';
 
 export default function SolutionsScreen() {
   const [solutions, setSolutions] = useState<Solution[]>([]);
@@ -190,7 +191,8 @@ export default function SolutionsScreen() {
                         <Button
                           theme='active'
                           onPress={() => {
-                            console.log('UPDATE');
+                            console.log('item.id', item.id);
+                            router.push(`/solutions/${item.id}`);
                           }}
                         >
                           Update
