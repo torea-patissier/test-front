@@ -93,7 +93,6 @@ export const usePuzzle = () => {
         Alert.alert(InfoMessage.FALSE.t, InfoMessage.FALSE.m);
       }
     } catch (error) {
-      console.log('error', error);
       if (error instanceof z.ZodError) {
         const uniqueMessages = [
           ...new Set(error.errors.map((err) => err.message)),

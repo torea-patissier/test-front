@@ -50,7 +50,6 @@ export default function SolutionsScreen() {
     try {
       setIsLoading(true);
       const data = await getSolutions();
-      console.log('data', data);
       setSolutions(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -180,7 +179,6 @@ export default function SolutionsScreen() {
                           variant='outlined'
                           color='red'
                           onPress={() => {
-                            console.log('item.id', item.id);
                             handleDeleteSolutionbyId(item.id);
                           }}
                         >
@@ -191,7 +189,6 @@ export default function SolutionsScreen() {
                         <Button
                           theme='active'
                           onPress={() => {
-                            console.log('item.id', item.id);
                             router.push(`/solutions/${item.id}`);
                           }}
                         >
