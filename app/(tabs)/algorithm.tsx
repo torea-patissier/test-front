@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { createStyles } from '@/styles/screens/algorithm';
 import { useState } from 'react';
 import { getAlgorithm } from '@/api/algorithm';
@@ -14,15 +14,13 @@ interface AlgorithmResponse {
 export default function AlgorithmScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const styles = createStyles(colorScheme);
-  const [algorithm, setAlgorithm] = useState<AlgorithmResponse>({
-    message:
-      'Duration: 3877 ms, Permutations tested: 362880, Solutions found: 2672 (saved in DB)',
-    status: 'success',
-  });
+  const [algorithm, setAlgorithm] = useState<AlgorithmResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function fetchAlgorithm() {
     try {
+      setIsLoading(true);
       const data = await getAlgorithm();
       setAlgorithm(data);
     } catch (err: unknown) {
@@ -31,6 +29,8 @@ export default function AlgorithmScreen() {
       } else {
         setError('An unknown error occurred');
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -53,11 +53,16 @@ export default function AlgorithmScreen() {
         { backgroundColor: Colors[colorScheme].background },
       ]}
     >
-      <Button onPress={fetchAlgorithm}>Run Algorithm</Button>
-      {error ? (
-        <Text style={styles.errorText}>Error: {error}</Text>
-      ) : algorithm ? (
-        <ScrollView style={styles.responseContainer}>
+      {!isLoading && !algorithm && (
+        <Button onPress={fetchAlgorithm}>Run Algorithm</Button>
+      )}
+
+      {isLoading && (
+        <ActivityIndicator size='large' color={Colors[colorScheme].text} />
+      )}
+
+      {!isLoading && algorithm && !error && (
+        <View>
           <Text
             style={[
               styles.responseText,
@@ -86,8 +91,10 @@ export default function AlgorithmScreen() {
           >
             {parseAlgorithmMessage(algorithm.message)}
           </View>
-        </ScrollView>
-      ) : null}
+        </View>
+      )}
+
+      {error && <Text style={styles.errorText}>Error: {error}</Text>}
     </View>
   );
 }

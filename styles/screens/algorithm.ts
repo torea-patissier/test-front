@@ -17,6 +17,7 @@ export const createStyles = (colorScheme: 'light' | 'dark') =>
     responseContainer: {
       width: '100%',
       padding: 10,
+      backgroundColor: 'red',
     },
     responseText: {
       fontSize: 16,

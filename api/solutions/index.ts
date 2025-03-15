@@ -33,6 +33,24 @@ export async function getSolutionById(id: string) {
   return response.json();
 }
 
+export async function getSolutionsByAlgoGenerated(isAlgoGenerated: boolean) {
+  const response = await fetch(
+    `${API_ROUTES.SOLUTIONS.FILTER.replace(':isAlgoGenerated', isAlgoGenerated.toString())}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Failed to get solutions by algo generated');
+  }
+
+  return response.json();
+}
+
 export async function postSolution(solution: { gridData: number[] }) {
   const response = await fetch(`${API_ROUTES.SOLUTIONS.POST}`, {
     method: 'POST',
