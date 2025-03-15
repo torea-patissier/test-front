@@ -43,12 +43,8 @@ export function DeleteAllSolutions({
 
               <XStack gap='$3' justifyContent='flex-end'>
                 <AlertDialog.Action asChild>
-                  <Button
-                    color='red'
-                    variant='outlined'
-                    onPress={handleDeleteAllSolutions}
-                  >
-                    Delete All
+                  <Button color='red' onPress={handleDeleteAllSolutions}>
+                    Yes I want to delete all solutions
                   </Button>
                 </AlertDialog.Action>
               </XStack>
