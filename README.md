@@ -1,50 +1,100 @@
-# Welcome to your Expo app 👋
+## Prerequisites
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js) or [yarn](https://yarnpkg.com/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- For iOS development:
+  - macOS computer
+  - Xcode (latest version)
+  - iOS Simulator
+- For Android development:
+  - Android Studio
+  - Android SDK
+  - Android Emulator
 
-## Get started
+## Installation
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+1. Clone the repository:
 ```bash
-npm run reset-project
+git https://github.com/torea-patissier/test-front.git
+
+cd test-front
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-## Learn more
+## Development
 
-To learn more about developing your project with Expo, look at the following resources:
+To start the development server:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm start
+# or
+yarn start
+```
 
-## Join the community
+This will open the Expo development server where you can choose to run the app on:
+- iOS Simulator (macOS only)
+- Android Emulator
+- Physical device through Expo Go app
 
-Join our community of developers creating universal apps.
+### Platform Specific Commands
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Run on iOS:
+```bash
+npm run ios
+# or
+yarn ios
+```
+
+Run on Android:
+```bash
+npm run android
+# or
+yarn android
+```
+
+## Project Structure
+
+This project uses:
+- Expo Router for navigation
+- Tamagui for UI components
+- TypeScript for type safety
+- Jest for testing
+- ESLint and Prettier for code formatting
+- Husky for git hooks
+- Conventional Commits for commit messages
+
+## Scripts
+
+- `start`: Start the Expo development server
+- `android`: Start the app on Android
+- `ios`: Start the app on iOS
+- `web`: Start the app on web
+- `test`: Run tests in watch mode
+- `lint`: Run ESLint
+
+## Contributing
+
+This project uses:
+- Conventional Commits for commit messages
+- Husky for git hooks
+- lint-staged for running checks before commits
+
+Make sure to follow the commit message convention as the project uses commitlint to enforce it.
+
+## Dependencies
+
+The project uses several key dependencies:
+- Expo SDK 52
+- React 18.3.1
+- React Native 0.76.7
+- Tamagui for UI components
+- React Navigation
+- And various Expo modules for additional functionality
