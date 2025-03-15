@@ -9,7 +9,7 @@ import { styles } from '@/styles/screens/solutions';
 import { useSolutions } from '@/hooks/useSolutions';
 import { useCallback } from 'react';
 import { StatusBadge } from '@/components/solutions/StatusBadge';
-
+import { TypeBadge } from '@/components/solutions/TypeBadge';
 export default function SolutionsScreen() {
   const {
     solutions,
@@ -28,24 +28,6 @@ export default function SolutionsScreen() {
     useCallback(() => {
       fetchSolutions();
     }, [fetchSolutions])
-  );
-
-  const TypeBadge = useCallback(
-    ({ isAlgorithm }: { isAlgorithm: boolean }) => (
-      <XStack
-        style={[
-          styles.badge,
-          {
-            backgroundColor: isAlgorithm ? colors.primary : colors.tint,
-          },
-        ]}
-      >
-        <Text style={styles.badgeText}>
-          {isAlgorithm ? 'Algorithm' : 'Manual'}
-        </Text>
-      </XStack>
-    ),
-    [colors]
   );
 
   const renderSolutionCard = useCallback(
