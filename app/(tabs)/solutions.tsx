@@ -10,6 +10,8 @@ import { useSolutions } from '@/hooks/useSolutions';
 import { useCallback } from 'react';
 import { StatusBadge } from '@/components/solutions/StatusBadge';
 import { TypeBadge } from '@/components/solutions/TypeBadge';
+import { DeleteAllSolutions } from '@/components/solutions/DeleteAllSolutions';
+
 export default function SolutionsScreen() {
   const {
     solutions,
@@ -158,55 +160,7 @@ export default function SolutionsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <XStack style={styles.headerActions}>
-        <AlertDialog>
-          <AlertDialog.Trigger asChild>
-            <Button
-              variant='outlined'
-              color='red'
-              size='$1'
-              icon={<IconSymbol name='trash' size={20} color={colors.error} />}
-            />
-          </AlertDialog.Trigger>
-          <AlertDialog.Portal>
-            <AlertDialog.Overlay key='overlay' animation='unset' opacity={1} />
-            <AlertDialog.Content>
-              <YStack gap='$3'>
-                <XStack justifyContent='space-between' alignItems='center'>
-                  <AlertDialog.Title>Delete All Solutions</AlertDialog.Title>
-                  <AlertDialog.Cancel asChild>
-                    <Button
-                      variant='outlined'
-                      icon={
-                        <IconSymbol
-                          name='xmark'
-                          size={20}
-                          color={colors.text}
-                        />
-                      }
-                    />
-                  </AlertDialog.Cancel>
-                </XStack>
-                <AlertDialog.Description>
-                  Are you sure you want to delete all solutions?
-                </AlertDialog.Description>
-
-                <XStack gap='$3' justifyContent='flex-end'>
-                  <AlertDialog.Action asChild>
-                    <Button
-                      color='red'
-                      variant='outlined'
-                      onPress={handleDeleteAllSolutions}
-                    >
-                      Delete All
-                    </Button>
-                  </AlertDialog.Action>
-                </XStack>
-              </YStack>
-            </AlertDialog.Content>
-          </AlertDialog.Portal>
-        </AlertDialog>
-      </XStack>
+      <DeleteAllSolutions handleDeleteAllSolutions={handleDeleteAllSolutions} />
       <FlatList
         style={styles.list}
         data={solutions}
