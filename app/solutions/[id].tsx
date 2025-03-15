@@ -5,13 +5,13 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { useEditSolution } from '@/hooks/useEditSolution';
-import { styles } from '@/styles/screens/editSolution';
+import { createStyles } from '@/styles/screens/editSolution';
 
 export default function EditSolutionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
-
+  const styles = createStyles();
   const {
     error,
     solution,
@@ -41,8 +41,8 @@ export default function EditSolutionScreen() {
         style={[styles.card, { backgroundColor: colors.background }]}
       >
         <Card.Header padded>
-          <XStack justifyContent='space-between' alignItems='center'>
-            <H2 style={{ color: colors.text, fontSize: 24, fontWeight: '600' }}>
+          <XStack style={styles.headerContainer}>
+            <H2 style={[styles.headerTitle, { color: colors.text }]}>
               Edit Solution
             </H2>
             <Button
@@ -101,26 +101,31 @@ export default function EditSolutionScreen() {
 
             <XStack gap='$4' style={styles.buttonContainer}>
               <Button
-                flex={1}
+                style={[styles.cancelButton, { borderColor: colors.border }]}
                 variant='outlined'
                 onPress={handleCancel}
-                style={{ borderColor: colors.border }}
               >
-                <Text style={{ color: colors.text }}>Cancel</Text>
+                <Text style={[styles.buttonText, { color: colors.text }]}>
+                  Cancel
+                </Text>
               </Button>
               <Button
-                flex={1}
+                style={[
+                  styles.updateButton,
+                  {
+                    backgroundColor: validationError
+                      ? colors.tabIconDefault
+                      : colors.tint,
+                    opacity: validationError ? 0.5 : 1,
+                  },
+                ]}
                 theme='active'
                 onPress={handleUpdate}
                 disabled={!!validationError}
-                style={{
-                  backgroundColor: validationError
-                    ? colors.tabIconDefault
-                    : colors.tint,
-                  opacity: validationError ? 0.5 : 1,
-                }}
               >
-                <Text style={{ color: colors.background }}>Update</Text>
+                <Text style={[styles.buttonText, { color: colors.background }]}>
+                  Update
+                </Text>
               </Button>
             </XStack>
           </YStack>
