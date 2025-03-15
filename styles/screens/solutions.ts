@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 export const styles = StyleSheet.create({
@@ -47,7 +47,10 @@ export const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
-    marginBottom: 80,
+    marginBottom: Platform.select({
+      ios: 80,
+      default: 0,
+    }),
   },
   listContent: {
     paddingVertical: 8,
