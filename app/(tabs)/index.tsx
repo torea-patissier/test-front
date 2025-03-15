@@ -7,7 +7,6 @@ import { PuzzleCell } from '@/types/solutions/puzzle';
 import { usePuzzle } from '@/hooks/usePuzzle';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-
 export default function PuzzleScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const styles = createStyles(colorScheme);

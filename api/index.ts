@@ -1,5 +1,10 @@
-// const ROOT_URL = 'http://localhost:8086/api'; // for simulator
-const ROOT_URL = 'http://192.168.1.9:8086/api'; // for real device
+import { Platform } from 'react-native';
+
+const ROOT_URL =
+  Platform.select({
+    ios: 'http://localhost:8086/api',
+    android: 'http://10.0.2.2:8086/api',
+  }) ?? 'http://localhost:8086/api';
 
 const PARAMS = {
   ID: ':id',
